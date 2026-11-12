@@ -1,6 +1,6 @@
 # Store listing
 
-Text to paste into the Chrome Web Store and Firefox Add-ons forms. The extension name and summary are translated in `src/locales.js` (`extName` and `extDescription`), and both stores pick them up from the package. Images are in `static/store/` and `static/images/`. Regenerate the store images with `pnpm icons`.
+Text to paste into the Chrome Web Store and Firefox Add-ons forms. The extension name and summary are translated in `src/locales.js` (`extName` and `extDescription`), and both stores pick them up from the package. All store graphics are in `static/store/`. Regenerate the icon and promo tiles with `pnpm icons`, and the screenshots with `pnpm screenshots`. [publishing.md](publishing.md) says which file goes in which field.
 
 ## Name
 
@@ -24,6 +24,9 @@ What it blurs:
 • In strict mode (on by default), any post about GTA or Rockstar, because many hide GTA VI behind "See more"
 
 How it works:
+• Blurs spoilers in place, or removes them from the page if you prefer
+• Labels each one: "GTA VI spoiler" when it names GTA VI, "GTA or Rockstar post" when strict mode caught it
+• Reads Facebook posts in full, so nothing hides behind "See more"
 • Blurs whole video tiles, posts, comments, and search results in place on YouTube, Reddit, X, Facebook, Instagram, TikTok, Twitch, Google, Bing, DuckDuckGo, and Steam
 • Blurs the matching card, list item, or paragraph on every other site
 • Covers pages that are about GTA VI with a see-through blur and pauses their videos
@@ -32,7 +35,7 @@ How it works:
 
 You stay in control:
 • Click any blurred post to see it
-• Turn strict mode off, or turn protection off for one site or everywhere, from the popup
+• Choose blur or remove, turn strict mode off, or turn protection off for one site or everywhere, from the popup
 • Choose "Show anyway" on any covered page
 
 Privacy: everything runs on your device. The extension collects no data, sends nothing anywhere, and has no analytics.
@@ -53,7 +56,7 @@ Blur content about the video game Grand Theft Auto VI on web pages, so the user 
 ## Permission justifications (Chrome Web Store)
 
 - **Host permission `<all_urls>`.** Spoilers can appear on any website. The content script reads the text of each page the user opens and blurs parts that mention GTA VI. It does not read or send form data, and it sends nothing off the device.
-- **`storage`.** Stores three settings on the device: whether protection is on, whether strict mode is on, and the list of sites where the user turned it off.
+- **`storage`.** Stores four settings on the device: whether protection is on, whether strict mode is on, whether to blur or remove, and the list of sites where the user turned it off.
 - **`scripting`.** On install, injects the content script into tabs that were already open, so they are protected without a reload.
 
 ## Data usage (Chrome Web Store)

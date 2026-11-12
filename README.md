@@ -12,15 +12,17 @@
 
 GTA 6 Spoiler Blocker is a browser extension for people who want to play Grand Theft Auto VI knowing nothing about it. Once the game is out, its story, characters, and ending will be on every feed, search page, and news site. Muting a few keywords on one social network does not stop that.
 
-The extension reads every page you open and blurs anything about GTA VI before you see it: video tiles, posts, comments, search results, article cards, and image captions. The page keeps its layout, and you click a blurred card to see it. Pages that are entirely about the game, such as a trailer or a review, are covered with a see-through blur and a short message.
+The extension reads every page you open and blurs anything about GTA VI before you see it: video tiles, posts, comments, search results, article cards, and image captions. The page keeps its layout, and you click a blurred card to see it. If you prefer, it removes them from the page instead. Pages that are entirely about the game, such as a trailer or a review, are covered with a see-through blur and a short message.
 
 It is on from the moment you install it, in every language. There is nothing to configure.
 
 ## Features
 
-- 🌫️ **Blurs in place.** A matching card stays where it is, blurred, with a small **GTA spoiler · Click to show** label. One click shows it. The click does not open the link underneath.
+- 🌫️ **Blurs in place, or removes.** A matching card stays where it is, blurred, with a small label. One click shows it, and the click does not open the link underneath. Switch to **Remove** in the popup to take spoilers out of the page completely.
+- 🏷️ **Says what it found.** A pink dot and **GTA VI spoiler** mark a card that names GTA VI, its characters, or its places. A teal dot and **GTA or Rockstar post** mark a card that strict mode caught because it only mentions GTA or Rockstar.
 - 🛡️ **Catches every spelling.** `GTA 6`, `GTA VI`, `gta6`, `#GTA6`, `GTA-VI`, `Grand Theft Auto: VI`, `ГТА 6`, `グラセフ6`, `侠盗猎车手6`, `그랜드 테프트 오토 6`, `जीटीए 6`, and more. Fullwidth digits, Roman numeral characters, and hidden zero-width characters do not get past it. The main characters, the places of Leonida, and phrases like "Jason dies" are blocked in several languages.
 - 🎯 **Strict mode, on by default.** Many posts hide GTA VI behind a **See more** link or inside an image, with only "All GTA helicopters" or a group called "Rockstar Games" in plain view. Strict mode also blurs posts that mention GTA, Grand Theft Auto, or Rockstar Games. Turn it off in the popup if you want older GTA content to stay clear.
+- 📖 **Reads Facebook posts in full.** Facebook cuts long posts off behind **See more**, and the GTA VI part is often after the cut. The extension clicks **See more** on each post, so the full text is checked before you read it.
 - 🌅 **Covers pages that are about the game.** If the address or the tab title mentions GTA VI, the page is blurred behind a card with **Take me back** and **Show anyway**. Videos and audio on the page are paused, and the tab is renamed.
 - 🎬 **Treats Rockstar's own channels as spoilers.** The Rockstar Games website, YouTube channel, X, Instagram, Facebook, Threads, TikTok, and Twitch accounts are covered, and any post that links to them is blurred.
 - 🧱 **Blurs whole cards.** It has card rules for YouTube, Reddit, X, Facebook, Instagram, TikTok, Twitch, Google, Bing, DuckDuckGo, and Steam, so a thumbnail is blurred together with its title. On other sites it blurs the nearest card, list item, or paragraph.
@@ -37,6 +39,10 @@ A YouTube search for `rockstar games trailer` without the extension:
 The same search with the extension:
 
 ![YouTube search with the extension](static/images/screenshot-youtube-on.png)
+
+Remove mode on a search for `new game trailers 2026`. Other games stay, and GTA VI is gone:
+
+![YouTube search in remove mode](static/images/screenshot-youtube-hide.png)
 
 A page about GTA VI:
 
@@ -61,15 +67,17 @@ To see a blurred card, click it. To open the link inside it, click again.
 
 Click the toolbar icon to open the popup:
 
-- **Protection** turns blurring on or off everywhere.
+- **Protection** turns blocking on or off everywhere.
+- **Spoilers** chooses **Blur** or **Remove**.
 - **Strict mode** also blurs posts that mention GTA or Rockstar without naming GTA VI.
-- **Blur on this site** turns blurring off for the current site only. Use it if you write about GTA VI or moderate a GTA community.
+- **Block on this site** turns blocking off for the current site only. Use it if you write about GTA VI or moderate a GTA community.
 
 To report a spoiler that got through, [open an issue](https://github.com/kpulka247/gta6-spoiler-blocker/issues) with the page address. Leave the spoiler itself out of the issue.
 
 ## Known limitations
 
 - **Images with no text.** The extension reads text, links, and image descriptions. A thumbnail that shows GTA VI art under a title that never mentions GTA stays clear. Strict mode catches most of these, because such posts usually name GTA or Rockstar somewhere.
+- **Facebook posts open up.** Because the extension clicks **See more**, every Facebook post in your feed shows its full text.
 - **Strict mode is broad.** It blurs GTA V and GTA Online posts, and any "GTA" that means the Greater Toronto Area. Click to show them, or turn strict mode off.
 - **Vice City.** The extension treats "Vice City" as a GTA VI location. Pages about Grand Theft Auto: Vice City from 2002 are blurred too.
 - **Site layouts change.** The card rules for each site match its current markup. When a site redesigns, a rule can stop matching. The fallback still blurs the nearest list item or paragraph, but a thumbnail can stay clear until the rule is updated.
@@ -133,23 +141,24 @@ Every merge to `main` runs [semantic-release](https://github.com/semantic-releas
 5. Uploads the Chrome build to the Chrome Web Store.
 6. Signs and uploads the Firefox build to Firefox Add-ons.
 
-You do not bump versions by hand.
+You do not bump versions by hand. To connect the stores the first time, follow [docs/publishing.md](docs/publishing.md).
 
 ## How it works
 
-| File                     | Owns                                                                                                                                                                                                                                                        |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/spoilers.js`        | What counts as a spoiler. `EXPLICIT_TERMS` lists the title in every script, the characters, the places, and death phrases. `FRANCHISE_TERMS` lists the broader terms that strict mode adds. `mentionsGta6()` and `urlMentionsGta6()` are the only matchers. |
-| `src/sites.js`           | Where a self-contained card starts and ends on each supported site, plus the fallback for every other site.                                                                                                                                                 |
-| `src/settings.js`        | The stored settings (`enabled`, `strict`, `allowedSites`) and their defaults.                                                                                                                                                                               |
-| `src/locales.js`         | Every user-facing string in every language. The build turns it into `_locales/*/messages.json`.                                                                                                                                                             |
-| `src/styles/tokens.css`  | The colors and font shared by the blur labels, the page cover, and the popup.                                                                                                                                                                               |
-| `src/content/blocker.js` | Walks the page, checks text and attributes, and blurs or reveals cards.                                                                                                                                                                                     |
-| `src/content/shield.js`  | The page cover.                                                                                                                                                                                                                                             |
-| `src/content/index.js`   | Starts the blocker, watches the page for changes, handles click-to-reveal, and decides when to cover the page.                                                                                                                                              |
-| `src/background.js`      | The toolbar badge, and protecting tabs that were open at install time.                                                                                                                                                                                      |
-| `public/manifest.json`   | The shared manifest. `webpack.config.js` adds the Chrome or Firefox background and the Firefox ID at build time.                                                                                                                                            |
-| `scripts/build-icons.js` | Renders the icons, README banner, and store images from `src/assets/logo.svg`. Run it with `pnpm icons`.                                                                                                                                                    |
+| File                             | Owns                                                                                                                                                                                                                                                        |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/spoilers.js`                | What counts as a spoiler. `EXPLICIT_TERMS` lists the title in every script, the characters, the places, and death phrases. `FRANCHISE_TERMS` lists the broader terms that strict mode adds. `mentionsGta6()` and `urlMentionsGta6()` are the only matchers. |
+| `src/sites.js`                   | Where a self-contained card starts and ends on each supported site, the fallback for every other site, the shelves that collapse when remove mode empties them, and the **See more** buttons to click.                                                      |
+| `src/settings.js`                | The stored settings (`enabled`, `strict`, `style`, `allowedSites`) and their defaults.                                                                                                                                                                      |
+| `src/locales.js`                 | Every user-facing string in every language. The build turns it into `_locales/*/messages.json`.                                                                                                                                                             |
+| `src/styles/tokens.css`          | The colors and font shared by the blur labels, the page cover, and the popup.                                                                                                                                                                               |
+| `src/content/blocker.js`         | Walks the page, checks text and attributes, and blurs or reveals cards.                                                                                                                                                                                     |
+| `src/content/shield.js`          | The page cover.                                                                                                                                                                                                                                             |
+| `src/content/index.js`           | Starts the blocker, watches the page for changes, handles click-to-reveal, and decides when to cover the page.                                                                                                                                              |
+| `src/background.js`              | The toolbar badge, and protecting tabs that were open at install time.                                                                                                                                                                                      |
+| `public/manifest.json`           | The shared manifest. `webpack.config.js` adds the Chrome or Firefox background and the Firefox ID at build time.                                                                                                                                            |
+| `scripts/build-icons.js`         | Renders the icons, store icon, README banner, and promo tiles from `src/assets/logo.svg`. Run it with `pnpm icons`.                                                                                                                                         |
+| `scripts/capture-screenshots.js` | Loads the extension into Chromium, opens YouTube, and writes the README screenshots and the framed store screenshots. Run it with `pnpm screenshots`.                                                                                                       |
 
 To block a new term, add it to `EXPLICIT_TERMS` or `FRANCHISE_TERMS` in `src/spoilers.js` and add an example to `test/unit/spoilers.test.js`.
 

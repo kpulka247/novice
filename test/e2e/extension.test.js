@@ -12,6 +12,7 @@ const extensionDir = path.resolve(here, "../../dist/gta6spoilerblocker-chrome");
 let server;
 let base;
 let context;
+let worker;
 let extensionId;
 
 before(async () => {
@@ -25,14 +26,16 @@ before(async () => {
 
   context = await chromium.launchPersistentContext("", {
     channel: "chromium",
+    locale: "en-US",
     args: [
+      "--lang=en-US",
       `--disable-extensions-except=${extensionDir}`,
       `--load-extension=${extensionDir}`,
     ],
   });
-  const [worker] = context.serviceWorkers().length
-    ? context.serviceWorkers()
-    : [await context.waitForEvent("serviceworker")];
+  worker =
+    context.serviceWorkers()[0] ??
+    (await context.waitForEvent("serviceworker"));
   extensionId = new URL(worker.url()).host;
 });
 
@@ -41,20 +44,23 @@ after(async () => {
   server?.close();
 });
 
-const isHidden = (page, id) =>
-  page.$eval(
-    `#${id}`,
-    (el) => getComputedStyle(el).display === "none" || !el.offsetParent,
-  );
+const setSettings = (patch) =>
+  worker.evaluate((p) => chrome.storage.local.set(p), patch);
+
+const stateOf = (page, id) =>
+  page.$eval(`#${id}`, (el) => {
+    const unit = el.closest("[data-gta6sb]");
+    return unit?.getAttribute("data-gta6sb") ?? "visible";
+  });
 
 async function openFeed() {
   const page = await context.newPage();
   await page.goto(`${base}/feed`);
-  await page.waitForSelector("#late", { state: "attached" });
+  await page.waitForSelector("#late[data-gta6sb]", { state: "attached" });
   return page;
 }
 
-test("hides GTA VI units and leaves everything else", async () => {
+test("blurs GTA VI units and leaves everything else", async () => {
   const page = await openFeed();
   for (const id of [
     "trailer",
@@ -65,22 +71,65 @@ test("hides GTA VI units and leaves everything else", async () => {
     "mention",
     "card",
   ]) {
-    assert.equal(await isHidden(page, id), true, `${id} should be hidden`);
+    assert.equal(await stateOf(page, id), "blur", `${id} should be blurred`);
   }
-  for (const id of ["pasta", "zelda", "gta5", "other", "article", "editor"]) {
-    assert.equal(await isHidden(page, id), false, `${id} should stay visible`);
+  for (const id of [
+    "pasta",
+    "zelda",
+    "other",
+    "article",
+    "editor",
+    "fb-cats",
+  ]) {
+    assert.equal(await stateOf(page, id), "visible", `${id} should stay clear`);
   }
+  const label = await page.$eval(
+    "#trailer",
+    (el) => getComputedStyle(el, "::after").content,
+  );
+  assert.match(label, /Show/);
   await page.close();
 });
 
-test("covers a page whose title is about GTA VI and hides the page body", async () => {
+test("strict mode catches posts that only name the franchise", async () => {
+  const page = await openFeed();
+  for (const id of ["fb-teaser", "fb-helicopters", "fb-weapons", "gta5"]) {
+    assert.equal(await stateOf(page, id), "blur", `${id} should be blurred`);
+  }
+
+  await setSettings({ strict: false });
+  await page.waitForFunction(
+    () => !document.querySelector("#fb-helicopters[data-gta6sb]"),
+  );
+  assert.equal(await stateOf(page, "gta5"), "visible");
+  assert.equal(await stateOf(page, "trailer"), "blur");
+  await setSettings({ strict: true });
+  await page.close();
+});
+
+test("clicking a blurred unit reveals it without following its link", async () => {
+  const page = await openFeed();
+  await page.click("#link");
+  assert.equal(await stateOf(page, "link"), "revealed");
+  assert.equal(new URL(page.url()).pathname, "/feed");
+
+  await page.click("#fb-teaser");
+  await page.$eval("#see-more", (el) => {
+    el.textContent = "Lucia Caminos returns in GTA 6";
+  });
+  await page.waitForTimeout(100);
+  assert.equal(await stateOf(page, "fb-teaser"), "revealed");
+  await page.close();
+});
+
+test("covers a page whose title is about GTA VI with a see-through blur", async () => {
   const page = await context.newPage();
   await page.goto(`${base}/news/1`);
   await page.waitForSelector("gta6sb-shield", { state: "attached" });
-  assert.equal(await page.title(), "Spoiler blocked");
+  assert.equal(await page.title(), "Spoiler ahead");
   assert.equal(
     await page.$eval("body", (b) => getComputedStyle(b).opacity),
-    "0",
+    "1",
   );
   await page.close();
 });
@@ -95,39 +144,36 @@ test("covers a page whose URL is about GTA VI before it renders", async () => {
 test("show anyway reveals the covered page", async () => {
   const page = await context.newPage();
   await page.goto(`${base}/news/2`);
-  await page.locator("gta6sb-shield").waitFor({ state: "attached" });
-  const box = await page.locator("gta6sb-shield").boundingBox();
-  await page.mouse.click(box.width / 2, box.height / 2 + 105);
+  await page.waitForSelector("gta6sb-shield", { state: "attached" });
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
   await page.waitForSelector("gta6sb-shield", { state: "detached" });
   assert.equal(await page.title(), "GTA 6 ending explained");
   await page.close();
 });
 
-test("popup switches turn blocking off globally and per site", async () => {
+test("popup switches turn blurring off globally and per site", async () => {
   const feed = await openFeed();
   const popup = await context.newPage();
   await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+  assert.equal(await popup.textContent("h1"), "GTA 6 Spoiler Blocker");
 
   await popup.click("label.row:has(#enabled)");
   await feed.waitForFunction(
-    () => !document.querySelector("[data-gta6sb-hidden]"),
+    () => !document.querySelector("[data-gta6sb='blur']"),
   );
-  assert.equal(await isHidden(feed, "trailer"), false);
-
   await popup.click("label.row:has(#enabled)");
-  await feed.waitForSelector("#trailer[data-gta6sb-hidden]", {
+  await feed.waitForSelector("#trailer[data-gta6sb='blur']", {
     state: "attached",
   });
 
-  await popup.evaluate(
-    (host) => chrome.storage.local.set({ allowedSites: [host] }),
-    "127.0.0.1",
-  );
+  await setSettings({ allowedSites: ["127.0.0.1"] });
   await feed.waitForFunction(
-    () => !document.querySelector("[data-gta6sb-hidden]"),
+    () => !document.querySelector("[data-gta6sb='blur']"),
   );
-  await popup.evaluate(() => chrome.storage.local.set({ allowedSites: [] }));
-  await feed.waitForSelector("#trailer[data-gta6sb-hidden]", {
+  await setSettings({ allowedSites: [] });
+  await feed.waitForSelector("#trailer[data-gta6sb='blur']", {
     state: "attached",
   });
 

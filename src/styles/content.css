@@ -1,12 +1,82 @@
-[data-gta6sb-hidden] {
-  display: none !important;
+@import "./tokens.css";
+
+[data-gta6sb="blur"] {
+  clip-path: inset(0) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  color: transparent !important;
+  text-shadow: 0 0 12px rgba(128, 128, 128, 0.9) !important;
+}
+
+[data-gta6sb="blur"][data-gta6sb-anchor] {
+  position: relative !important;
+}
+
+[data-gta6sb="blur"] > * {
+  filter: blur(24px) !important;
+  pointer-events: none !important;
+}
+
+[data-gta6sb="blur"]::after {
+  content: attr(data-gta6sb-label) !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 2147483646 !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  width: max-content !important;
+  height: auto !important;
+  max-width: calc(100% - 16px) !important;
+  margin: 0 !important;
+  padding: 8px 14px 8px 28px !important;
+  overflow: hidden !important;
+  transform: translate(-50%, -50%) !important;
+  border: 1px solid var(--gta6sb-line) !important;
+  border-radius: 999px !important;
+  background:
+    radial-gradient(
+      circle at 15px 50%,
+      var(--gta6sb-pink) 3.5px,
+      transparent 4.5px
+    ),
+    var(--gta6sb-ink-glass) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35) !important;
+  color: var(--gta6sb-text) !important;
+  font: 600 12px/1.2 var(--gta6sb-font) !important;
+  letter-spacing: 0.01em !important;
+  text-shadow: none !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+  transition: background-color 0.15s ease !important;
+}
+
+[data-gta6sb="blur"][data-gta6sb-size="s"]::after {
+  padding: 4px 9px 4px 20px !important;
+  font-size: 11px !important;
+  background:
+    radial-gradient(
+      circle at 11px 50%,
+      var(--gta6sb-pink) 3px,
+      transparent 4px
+    ),
+    var(--gta6sb-ink-glass) !important;
+}
+
+[data-gta6sb="blur"]:hover::after,
+[data-gta6sb="blur"]:focus-visible::after {
+  border-color: var(--gta6sb-pink) !important;
+}
+
+[data-gta6sb="blur"]:focus-visible {
+  outline: 2px solid var(--gta6sb-pink) !important;
+  outline-offset: -2px !important;
 }
 
 html[data-gta6sb-shield] {
   overflow: hidden !important;
-}
-
-html[data-gta6sb-shield] > body {
-  opacity: 0 !important;
-  pointer-events: none !important;
 }

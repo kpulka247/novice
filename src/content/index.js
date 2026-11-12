@@ -1,23 +1,24 @@
 import { mentionsGta6, urlMentionsGta6 } from "../spoilers.js";
-import { ext, getSettings, onSettingsChange, blocksOn } from "../settings.js";
 import {
-  WATCHED_ATTRS,
-  checkAttributes,
-  countHidden,
-  hideSpoilersIn,
-  revealAll,
-} from "./blocker.js";
+  DEFAULT_SETTINGS,
+  blocksOn,
+  ext,
+  getSettings,
+  onSettingsChange,
+} from "../settings.js";
+import { WATCHED_ATTRS, createBlocker } from "./blocker.js";
 import { BLOCKED_TITLE, createShield } from "./shield.js";
 
 const host = location.hostname;
 const isTopFrame = window === window.top;
+const blocker = createBlocker(host);
 
-let settings = { enabled: true, allowedSites: [] };
+let settings = DEFAULT_SETTINGS;
 let revealedHref = null;
 let siteTitle = "";
 let lastHref = location.href;
 let lastReported = -1;
-let wasActive = false;
+let appliedConfig = "off";
 
 const shield = createShield({
   onLeave: () => {
@@ -42,39 +43,49 @@ function readSiteTitle() {
   if (document.title !== BLOCKED_TITLE) siteTitle = document.title;
 }
 
+function restoreTitle() {
+  if (document.title === BLOCKED_TITLE) document.title = siteTitle;
+}
+
+function count() {
+  return blocker.count() + (shield.shown ? 1 : 0);
+}
+
 function report() {
   if (!isTopFrame) return;
-  const count = countHidden() + (shield.shown ? 1 : 0);
-  if (count === lastReported) return;
-  lastReported = count;
-  ext.runtime.sendMessage({ type: "blocked-count", count }).catch(() => {});
+  const current = count();
+  if (current === lastReported) return;
+  lastReported = current;
+  ext.runtime
+    .sendMessage({ type: "blocked-count", count: current })
+    .catch(() => {});
 }
 
 function sync() {
   readSiteTitle();
   const active = isActive();
-  if (active && !wasActive) hideSpoilersIn(document.documentElement, host);
-  wasActive = active;
-  if (!active) {
-    shield.hide();
-    revealAll();
-    if (document.title === BLOCKED_TITLE) document.title = siteTitle;
-  } else if (pageIsAboutGta6()) {
+  const config = active ? `on:${settings.strict}` : "off";
+  if (config !== appliedConfig) {
+    appliedConfig = config;
+    blocker.clearAll();
+    blocker.setStrict(settings.strict);
+    if (active) blocker.scan(document.documentElement);
+  }
+  if (active && pageIsAboutGta6()) {
     shield.show();
   } else {
     shield.hide();
-    if (document.title === BLOCKED_TITLE) document.title = siteTitle;
+    restoreTitle();
   }
   report();
 }
 
 function handleMutations(records) {
-  if (isActive()) {
+  if (appliedConfig !== "off") {
     for (const record of records) {
-      if (record.type === "attributes") checkAttributes(record.target, host);
-      else if (record.type === "characterData")
-        hideSpoilersIn(record.target, host);
-      else record.addedNodes.forEach((node) => hideSpoilersIn(node, host));
+      if (record.type === "attributes") blocker.checkAttributes(record.target);
+      else if (record.type === "characterData") blocker.scan(record.target);
+      else record.addedNodes.forEach((node) => blocker.scan(node));
     }
   }
   const titleChanged =
@@ -87,6 +98,29 @@ function handleMutations(records) {
   }
 }
 
+function revealOnActivate(event) {
+  const unit = blocker.blurredUnitAt(event.target);
+  if (!unit) return;
+  if (event.type === "keydown" && event.key !== "Enter" && event.key !== " ") {
+    return;
+  }
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  if (event.type === "click" || event.type === "keydown") {
+    blocker.reveal(unit);
+    report();
+  }
+}
+
+const GUARDED_EVENTS = [
+  "pointerdown",
+  "mousedown",
+  "mouseup",
+  "click",
+  "auxclick",
+  "keydown",
+];
+
 function start() {
   new MutationObserver(handleMutations).observe(document, {
     childList: true,
@@ -95,6 +129,10 @@ function start() {
     attributes: true,
     attributeFilter: WATCHED_ATTRS,
   });
+
+  for (const type of GUARDED_EVENTS) {
+    window.addEventListener(type, revealOnActivate, true);
+  }
 
   document.addEventListener(
     "play",
@@ -105,12 +143,10 @@ function start() {
   );
 
   sync();
-
   getSettings().then((stored) => {
     settings = stored;
     sync();
   });
-
   onSettingsChange((next) => {
     settings = next;
     sync();
@@ -119,11 +155,7 @@ function start() {
   if (isTopFrame) {
     ext.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (message.type !== "status") return;
-      sendResponse({
-        host,
-        count: countHidden() + (shield.shown ? 1 : 0),
-        shielded: shield.shown,
-      });
+      sendResponse({ host, count: count(), shielded: shield.shown });
     });
   }
 }

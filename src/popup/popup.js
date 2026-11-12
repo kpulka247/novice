@@ -4,11 +4,21 @@ import {
   getSettings,
   isSiteAllowed,
   onSettingsChange,
-  setEnabled,
   setSiteAllowed,
+  updateSettings,
 } from "../settings.js";
 
 const $ = (id) => document.getElementById(id);
+const t = (key) => ext.i18n.getMessage(key);
+
+function translate() {
+  document.documentElement.lang = ext.i18n.getUILanguage();
+  document.documentElement.dir = t("@@bidi_dir");
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  $("logo").innerHTML = logo;
+}
 
 async function pageStatus() {
   const [tab] = await ext.tabs.query({ active: true, currentWindow: true });
@@ -20,40 +30,43 @@ async function pageStatus() {
 }
 
 function render(settings, status) {
-  $("enabled").checked = settings.enabled;
-  $("enabled-hint").textContent = settings.enabled
-    ? "Blocking GTA VI everywhere"
-    : "Paused, spoilers can get through";
   document.body.classList.toggle("paused", !settings.enabled);
+  $("enabled").checked = settings.enabled;
+  $("enabled-hint").textContent = t(
+    settings.enabled ? "protectionOn" : "protectionOff",
+  );
+  $("strict").checked = settings.strict;
+  $("strict").disabled = !settings.enabled;
 
+  $("site-row").hidden = !status;
   if (!status) {
-    $("site-row").hidden = true;
-    $("count").textContent = "–";
-    $("count-label").textContent = "nothing to block on this page";
+    $("count").textContent = "0";
+    $("count-label").textContent = t("countLabelNone");
     return;
   }
 
   const siteBlocked = !isSiteAllowed(settings, status.host);
-  $("site-row").hidden = false;
   $("site").checked = siteBlocked;
   $("site").disabled = !settings.enabled;
-  $("site-host").textContent = siteBlocked
-    ? status.host
-    : `${status.host} is allowed`;
-
+  $("site-host").textContent = siteBlocked ? status.host : t("siteAllowed");
   $("count").textContent = status.count;
-  $("count-label").textContent = status.shielded
-    ? "this whole page is about GTA VI and is covered"
-    : `spoiler${status.count === 1 ? "" : "s"} blocked on this page`;
+  $("count-label").textContent = t(
+    status.shielded ? "countLabelPage" : "countLabel",
+  );
 }
 
 async function init() {
-  $("logo").innerHTML = logo;
+  translate();
   let settings = await getSettings();
   let status = await pageStatus();
   render(settings, status);
 
-  $("enabled").addEventListener("change", (e) => setEnabled(e.target.checked));
+  $("enabled").addEventListener("change", (e) =>
+    updateSettings({ enabled: e.target.checked }),
+  );
+  $("strict").addEventListener("change", (e) =>
+    updateSettings({ strict: e.target.checked }),
+  );
   $("site").addEventListener("change", (e) => {
     if (status) setSiteAllowed(status.host, !e.target.checked);
   });

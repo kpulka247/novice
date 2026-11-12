@@ -1,6 +1,6 @@
 import { ext } from "./settings.js";
 
-const BADGE_COLOR = "#ff2d95";
+const BADGE_COLOR = "#ff3d9a";
 
 ext.runtime.onInstalled.addListener(async ({ reason }) => {
   if (reason !== "install") return;

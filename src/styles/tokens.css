@@ -1,0 +1,20 @@
+:root,
+:host {
+  --gta6sb-ink: #0d0b14;
+  --gta6sb-ink-glass: rgba(13, 11, 20, 0.8);
+  --gta6sb-surface: #16131f;
+  --gta6sb-line: rgba(255, 255, 255, 0.08);
+  --gta6sb-text: #f5f3f8;
+  --gta6sb-muted: #a39cb3;
+  --gta6sb-pink: #ff3d9a;
+  --gta6sb-orange: #ffa24c;
+  --gta6sb-teal: #3de0d8;
+  --gta6sb-sunset: linear-gradient(
+    90deg,
+    var(--gta6sb-pink),
+    var(--gta6sb-orange)
+  );
+  --gta6sb-font:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Helvetica, Arial,
+    sans-serif;
+}

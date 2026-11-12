@@ -1,28 +1,32 @@
 import logo from "../assets/logo.svg";
+import tokens from "../styles/tokens.css?raw";
 import styles from "./shield.css?raw";
+import { ext } from "../settings.js";
 
 const SHIELD_ATTR = "data-gta6sb-shield";
-export const BLOCKED_TITLE = "Spoiler blocked";
+const t = (key) => ext.i18n.getMessage(key);
 
-const markup = `
-  <style>${styles}</style>
-  <div class="backdrop" role="alertdialog" aria-labelledby="title" aria-describedby="text">
-    <div class="card">
-      <div class="logo">${logo}</div>
-      <h1 id="title">Spoiler blocked</h1>
-      <p id="text">This page is about GTA VI. We covered it so you can go into the game knowing nothing.</p>
-      <div class="actions">
-        <button class="leave" type="button">Take me back</button>
-        <button class="reveal" type="button">Show anyway (spoilers ahead)</button>
-      </div>
-      <div class="brand">GTA 6 Spoiler Blocker</div>
-    </div>
-  </div>`;
+export const BLOCKED_TITLE = t("shieldTitle");
 
 export function createShield({ onLeave, onReveal }) {
   const host = document.createElement("gta6sb-shield");
   const root = host.attachShadow({ mode: "closed" });
-  root.innerHTML = markup;
+  root.innerHTML = `
+    <style>${tokens}${styles}</style>
+    <div class="backdrop" role="alertdialog" aria-labelledby="title" aria-describedby="text">
+      <div class="card">
+        <div class="logo">${logo}</div>
+        <h1 id="title"></h1>
+        <p id="text"></p>
+        <button class="leave" type="button"></button>
+        <button class="reveal" type="button"></button>
+      </div>
+    </div>`;
+  root.querySelector(".backdrop").dir = t("@@bidi_dir");
+  root.querySelector("h1").textContent = t("shieldTitle");
+  root.querySelector("p").textContent = t("shieldText");
+  root.querySelector(".leave").textContent = t("shieldBack");
+  root.querySelector(".reveal").textContent = t("shieldShow");
   root.querySelector(".leave").addEventListener("click", onLeave);
   root.querySelector(".reveal").addEventListener("click", onReveal);
 
@@ -36,9 +40,7 @@ export function createShield({ onLeave, onReveal }) {
       shown = true;
       const html = document.documentElement;
       html.setAttribute(SHIELD_ATTR, "");
-      if (host.parentNode !== html || html.lastElementChild !== host) {
-        html.appendChild(host);
-      }
+      if (html.lastElementChild !== host) html.appendChild(host);
       if (document.title !== BLOCKED_TITLE) document.title = BLOCKED_TITLE;
       document.querySelectorAll("video, audio").forEach((m) => m.pause());
     },

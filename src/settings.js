@@ -1,26 +1,34 @@
 export const ext = globalThis.browser ?? globalThis.chrome;
 
-const DEFAULTS = { enabled: true, allowedSites: [] };
+export const DEFAULT_SETTINGS = {
+  enabled: true,
+  strict: true,
+  allowedSites: [],
+};
 
 export async function getSettings() {
-  return { ...DEFAULTS, ...(await ext.storage.local.get(DEFAULTS)) };
+  return {
+    ...DEFAULT_SETTINGS,
+    ...(await ext.storage.local.get(DEFAULT_SETTINGS)),
+  };
 }
 
-export async function setEnabled(enabled) {
-  await ext.storage.local.set({ enabled });
+export async function updateSettings(patch) {
+  await ext.storage.local.set(patch);
 }
 
 export async function setSiteAllowed(host, allowed) {
   const { allowedSites } = await getSettings();
   const others = allowedSites.filter((site) => site !== host);
-  await ext.storage.local.set({
-    allowedSites: allowed ? [...others, host] : others,
-  });
+  await updateSettings({ allowedSites: allowed ? [...others, host] : others });
 }
 
 export function onSettingsChange(callback) {
   ext.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && Object.keys(changes).some((k) => k in DEFAULTS)) {
+    if (
+      area === "local" &&
+      Object.keys(changes).some((k) => k in DEFAULT_SETTINGS)
+    ) {
       getSettings().then(callback);
     }
   });

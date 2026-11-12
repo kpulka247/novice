@@ -11,50 +11,60 @@
     <header>
       <div class="logo" id="logo"></div>
       <div>
-        <h1>GTA 6 Spoiler Blocker</h1>
-        <p class="tagline">Go in blind.</p>
+        <h1 data-i18n="extName"></h1>
+        <p class="tagline" data-i18n="tagline"></p>
       </div>
     </header>
 
     <main>
-      <section class="stat" id="stat">
+      <section class="stat">
         <span class="stat-number" id="count">0</span>
-        <span class="stat-label" id="count-label"
-          >spoilers blocked on this page</span
-        >
+        <span class="stat-label" id="count-label"></span>
       </section>
 
-      <label class="row">
-        <span>
-          <span class="row-title">Protection</span>
-          <span class="row-hint" id="enabled-hint"
-            >Blocking GTA VI everywhere</span
-          >
-        </span>
-        <input type="checkbox" class="switch" id="enabled" />
-      </label>
+      <section class="settings">
+        <label class="row">
+          <span class="row-text">
+            <span class="row-title" data-i18n="protection"></span>
+            <span class="row-hint" id="enabled-hint"></span>
+          </span>
+          <input type="checkbox" class="switch" id="enabled" />
+        </label>
 
-      <label class="row" id="site-row">
-        <span>
-          <span class="row-title">Block on this site</span>
-          <span class="row-hint" id="site-host"></span>
-        </span>
-        <input type="checkbox" class="switch" id="site" />
-      </label>
+        <label class="row">
+          <span class="row-text">
+            <span class="row-title" data-i18n="strict"></span>
+            <span class="row-hint" data-i18n="strictHint"></span>
+          </span>
+          <input type="checkbox" class="switch" id="strict" />
+        </label>
+
+        <label class="row" id="site-row">
+          <span class="row-text">
+            <span class="row-title" data-i18n="site"></span>
+            <span class="row-hint" id="site-host"></span>
+          </span>
+          <input type="checkbox" class="switch" id="site" />
+        </label>
+      </section>
     </main>
 
     <footer>
       <a
         href="https://github.com/kpulka247/gta6-spoiler-blocker/issues"
         target="_blank"
-        >Report a leak</a
-      >
+        data-i18n="reportLeak"
+      ></a>
       <a
         href="https://github.com/kpulka247/gta6-spoiler-blocker"
         target="_blank"
-        >Source code</a
-      >
-      <a href="https://ko-fi.com/Y8Y71ERSZF" target="_blank">Support</a>
+        data-i18n="sourceCode"
+      ></a>
+      <a
+        href="https://ko-fi.com/Y8Y71ERSZF"
+        target="_blank"
+        data-i18n="support"
+      ></a>
     </footer>
     <script src="popup.js"></script>
   </body>

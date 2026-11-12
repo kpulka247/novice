@@ -1,0 +1,113 @@
+:host {
+  all: initial;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  display: block !important;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow: auto;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  color: #fff;
+  background:
+    radial-gradient(120% 70% at 50% 110%, #ff5f6d55 0%, transparent 60%),
+    radial-gradient(80% 50% at 85% 0%, #2de2e633 0%, transparent 60%),
+    linear-gradient(180deg, #120822 0%, #24123d 60%, #3a1446 100%);
+}
+
+.card {
+  width: min(440px, 100%);
+  text-align: center;
+  padding: 36px 28px 28px;
+  border-radius: 20px;
+  background: #0d061acc;
+  border: 1px solid #ffffff1f;
+  box-shadow: 0 24px 60px #00000080;
+}
+
+.logo {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 18px;
+}
+
+.logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+h1 {
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #ff2d95, #ffa63d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+p {
+  margin: 0 0 26px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #d9cce8;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.leave {
+  border: none;
+  color: #fff;
+  background: linear-gradient(90deg, #ff2d95, #ff5f6d);
+}
+
+.leave:hover {
+  background: linear-gradient(90deg, #ff47a3, #ff7480);
+}
+
+.reveal {
+  border: 1px solid #ffffff33;
+  color: #b9a8cc;
+  background: transparent;
+}
+
+.reveal:hover {
+  color: #fff;
+  border-color: #ffffff66;
+}
+
+.brand {
+  margin-top: 22px;
+  font-size: 12px;
+  color: #7d6a93;
+}

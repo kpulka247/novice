@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GTA 6 Spoiler Blocker</title>
+    <link rel="stylesheet" href="styles/popup.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="logo" id="logo"></div>
+      <div>
+        <h1>GTA 6 Spoiler Blocker</h1>
+        <p class="tagline">Go in blind.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="stat" id="stat">
+        <span class="stat-number" id="count">0</span>
+        <span class="stat-label" id="count-label"
+          >spoilers blocked on this page</span
+        >
+      </section>
+
+      <label class="row">
+        <span>
+          <span class="row-title">Protection</span>
+          <span class="row-hint" id="enabled-hint"
+            >Blocking GTA VI everywhere</span
+          >
+        </span>
+        <input type="checkbox" class="switch" id="enabled" />
+      </label>
+
+      <label class="row" id="site-row">
+        <span>
+          <span class="row-title">Block on this site</span>
+          <span class="row-hint" id="site-host"></span>
+        </span>
+        <input type="checkbox" class="switch" id="site" />
+      </label>
+    </main>
+
+    <footer>
+      <a
+        href="https://github.com/kpulka247/gta6-spoiler-blocker/issues"
+        target="_blank"
+        >Report a leak</a
+      >
+      <a
+        href="https://github.com/kpulka247/gta6-spoiler-blocker"
+        target="_blank"
+        >Source code</a
+      >
+      <a href="https://ko-fi.com/Y8Y71ERSZF" target="_blank">Support</a>
+    </footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+[data-gta6sb-hidden] {
+  display: none !important;
+}
+
+html[data-gta6sb-shield] {
+  overflow: hidden !important;
+}
+
+html[data-gta6sb-shield] > body {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

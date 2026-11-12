@@ -31,10 +31,11 @@ Do not paste the spoiler into the issue. Other people read issues too.
    - **Chrome.** Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and select `dist/gta6spoilerblocker-chrome/`.
    - **Firefox.** Open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `manifest.json` in `dist/gta6spoilerblocker-firefox/`.
 
-## Add a term or a site
+## Add a term, a site, or a language
 
-- **A new term.** Add it to `TERM_GROUPS` in `src/spoilers.js`. Add an example that must be blocked to `SPOILERS` in `test/unit/spoilers.test.js`. If the term is close to common words, add a phrase that must stay visible to `SAFE`.
-- **A new site.** Add an entry to `SITE_UNITS` in `src/sites.js`. List the selectors of the smallest element that holds one whole item, such as a post or a video tile, so its thumbnail is hidden with its title.
+- **A new term.** Add it to `EXPLICIT_TERMS` in `src/spoilers.js` if it always means GTA VI, or to `FRANCHISE_TERMS` if it only hints at GTA and should be blurred in strict mode. Add an example that must be blocked to `SPOILERS` in `test/unit/spoilers.test.js`. If the term is close to common words, add a phrase that must stay visible to `SAFE`.
+- **A new site.** Add an entry to `SITE_UNITS` in `src/sites.js`. List the selectors of the smallest element that holds one whole item, such as a post or a video tile, so its thumbnail is blurred with its title.
+- **A new language.** Copy the `en` block in `src/locales.js`, rename it to the [Chrome locale code](https://developer.chrome.com/docs/extensions/reference/api/i18n#locales), and translate every value. `pnpm test` checks that no key is missing and that the store description fits in 132 characters.
 
 Run the tests before you open a Pull Request:
 

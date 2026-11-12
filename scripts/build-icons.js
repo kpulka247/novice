@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync } from "node:fs";
 
 const LOGO_FILE = "src/assets/logo.svg";
 const logo = readFileSync(LOGO_FILE, "utf8");
+const FONT = "Segoe UI, Inter, Arial, sans-serif";
 
 const nestedLogo = (x, y, size) =>
   logo.replace(
@@ -10,44 +11,36 @@ const nestedLogo = (x, y, size) =>
     `<svg x="${x}" y="${y}" width="${size}" height="${size}" `,
   );
 
-const sunStripes = [0, 1, 2, 3, 4]
+const sunGaps = [0, 1, 2, 3]
   .map(
     (i) =>
-      `<rect x="0" y="${505 + i * 34}" width="1320" height="${6 + i * 3}" fill="#2a0f3d"/>`,
+      `<rect x="840" y="${500 + i * 36}" width="420" height="${4 + i * 3}" fill="#0d0b14"/>`,
   )
   .join("");
 
 const banner = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1320" height="840" viewBox="0 0 1320 840">
   <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#120822"/>
-      <stop offset="0.6" stop-color="#2a0f3d"/>
-      <stop offset="1" stop-color="#5a1a4f"/>
-    </linearGradient>
     <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffa63d"/>
-      <stop offset="0.6" stop-color="#ff5f6d"/>
-      <stop offset="1" stop-color="#ff2d95"/>
+      <stop offset="0" stop-color="#ffa24c"/>
+      <stop offset="1" stop-color="#ff3d9a"/>
     </linearGradient>
-    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#ff2d95"/>
-      <stop offset="1" stop-color="#ffa63d"/>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff3d9a"/>
+      <stop offset="1" stop-color="#ffa24c"/>
     </linearGradient>
-    <clipPath id="sunClip"><rect x="0" y="0" width="1320" height="660"/></clipPath>
-    <clipPath id="stripeClip"><circle cx="1040" cy="600" r="230"/></clipPath>
+    <clipPath id="horizon"><rect width="1320" height="640"/></clipPath>
   </defs>
-  <rect width="1320" height="840" fill="url(#sky)"/>
-  <g clip-path="url(#sunClip)">
-    <circle cx="1040" cy="600" r="230" fill="url(#sun)" opacity="0.9"/>
-    <g clip-path="url(#stripeClip)">${sunStripes}</g>
+  <rect width="1320" height="840" fill="#0d0b14"/>
+  <g clip-path="url(#horizon)">
+    <circle cx="1050" cy="640" r="190" fill="url(#sun)"/>
+    ${sunGaps}
   </g>
-  <rect x="0" y="660" width="1320" height="180" fill="#1a0b2e"/>
-  <line x1="0" y1="660" x2="1320" y2="660" stroke="#2de2e6" stroke-width="4"/>
-  ${nestedLogo(90, 110, 260)}
-  <text x="90" y="520" font-family="Segoe UI, Arial, sans-serif" font-weight="900" font-size="132" fill="url(#title)">GTA 6</text>
-  <text x="90" y="620" font-family="Segoe UI, Arial, sans-serif" font-weight="900" font-size="92" fill="#ffffff">SPOILER BLOCKER</text>
-  <text x="94" y="760" font-family="Segoe UI, Arial, sans-serif" font-weight="700" font-size="44" letter-spacing="8" fill="#2de2e6">GO IN BLIND</text>
+  <rect x="0" y="639" width="1320" height="2" fill="url(#line)"/>
+  ${nestedLogo(110, 150, 140)}
+  <text x="106" y="420" font-family="${FONT}" font-weight="800" font-size="92" letter-spacing="-2" fill="#f5f3f8">GTA 6</text>
+  <text x="106" y="520" font-family="${FONT}" font-weight="800" font-size="92" letter-spacing="-2" fill="#f5f3f8">Spoiler Blocker</text>
+  <text x="110" y="745" font-family="${FONT}" font-weight="600" font-size="40" fill="#a39cb3">Go in blind.</text>
 </svg>`;
 
 mkdirSync("public/icons", { recursive: true });

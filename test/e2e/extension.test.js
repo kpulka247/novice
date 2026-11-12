@@ -293,6 +293,14 @@ test("covers a page whose URL is about GTA VI before it renders", async () => {
   await page.close();
 });
 
+test("a blurred unit the site made click-through still takes the click", async () => {
+  const page = await openFeed();
+  const box = await page.locator("#ghost").boundingBox();
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  assert.equal(await stateOf(page, "ghost"), "revealed");
+  await page.close();
+});
+
 test("show anyway reveals the covered page", async () => {
   const page = await context.newPage();
   await page.goto(`${base}/news/2`);

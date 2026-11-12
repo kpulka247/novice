@@ -12,6 +12,7 @@ const SITE_UNITS = [
       "ytd-compact-radio-renderer",
       "ytd-channel-renderer",
       "ytd-reel-item-renderer",
+      "ytd-reel-video-renderer",
       "ytd-rich-section-renderer",
       "ytd-shelf-renderer",
       "ytd-comment-thread-renderer",

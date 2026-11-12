@@ -56,6 +56,18 @@ const SPOILERS = [
   "Lucia stirbt",
   "Jason ginie",
   "Джейсон умирает",
+  "Bae-Luxe and Roxy",
+  "Lori Heder",
+  "Only Raw Records",
+  "Wyman's World Auto Salvage",
+  "San4San",
+  "Dale's Shopwell",
+  "Vice Beach at night",
+  "Vice-Dale County",
+  "Ekanfinaka",
+  "Leaf Links golf",
+  "VCPD chase",
+  "Kalaga trail",
 ];
 
 const SAFE = [
@@ -76,6 +88,12 @@ const SAFE = [
   "agta6x",
   "Rockstar Games",
   "All GTA helicopters",
+  "Hamlet by Shakespeare",
+  "Little Haiti restaurants",
+  "Carl Johnson, accountant",
+  "Dale's diner",
+  "Rob Nelson interview",
+  "Ambrosia salad",
 ];
 
 const FRANCHISE_ONLY = [
@@ -89,6 +107,33 @@ const FRANCHISE_ONLY = [
   "Обзор ГТА",
   "侠盗猎车手",
   "グラセフ",
+  "Rob Nelson on the new engine",
+  "Sam Houser",
+  "Imran Sarwar",
+  "Leslie Benzies",
+  "Strauss Zelnick on earnings",
+  "Take-Two Interactive",
+  "Rockstar North",
+  "R* confirmed it",
+  "Tez2 says",
+  "via Yan2295",
+  "VideotechUK",
+  "CyberLeek footage",
+  "KiwiTalkz",
+  "teapotuberhacker",
+  "Arion Kurtaj",
+  "Rockstar Intel",
+  "GTABase",
+  "Ambrosia",
+  "Petra Navarro",
+  "Los Santos",
+  "Liberty City",
+  "Niko Bellic",
+  "Tommy Vercetti",
+  "Trevor Philips",
+  "Cluckin' Bell",
+  "Pißwasser",
+  "Ammu-Nation",
 ];
 
 const SAFE_EVEN_STRICT = [
@@ -98,6 +143,10 @@ const SAFE_EVEN_STRICT = [
   "agtax",
   "Rockstar developer wanted",
   "212GB. Your PS5 is NOT ready",
+  "Hamlet by Shakespeare",
+  "Carl Johnson, accountant",
+  "rockstar intelligence",
+  "R2D2",
 ];
 
 for (const text of SPOILERS) {

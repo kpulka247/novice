@@ -42,6 +42,13 @@ const EXPLICIT_TERMS = {
     ["real", "dimez"],
     ["raul", "bautista"],
     ["brian", "heder"],
+    ["lori", "heder"],
+    ["bae", "luxe"],
+    ["only", "raw", "records"],
+    ["wyman['’]?s", "world"],
+    ["san4san"],
+    ["chester['’]?s", "music"],
+    ["dale['’]?s", "shopwell"],
   ],
   places: [
     ["leonida"],
@@ -57,6 +64,12 @@ const EXPLICIT_TERMS = {
     ["port", "gellhorn"],
     ["grass", "rivers"],
     ["mount", "kalaga"],
+    ["kalaga"],
+    ["vice", "beach"],
+    ["vice", "dale"],
+    ["ekanfinaka"],
+    ["leaf", "links"],
+    ["vcpd"],
   ],
   spoilers: [
     ["(?:jason|lucia)", DIES],
@@ -64,20 +77,78 @@ const EXPLICIT_TERMS = {
   ],
 };
 
-const FRANCHISE_TERMS = [
-  ["gta(?:v|iv|o|sa|vc)?"],
-  ["grand", "theft", "auto"],
-  ["гта"],
-  ["グラセフ"],
-  ["グランド", "セフト", "オート"],
-  ["侠盗猎车手"],
-  ["俠盜獵車手"],
-  ["그랜드", "테프트", "오토"],
-  ["جي", "تي", "[اأ]ي"],
-  ["जीटीए"],
-  ["rockstar", "games"],
-  ["rockstar['’]s"],
-];
+const FRANCHISE_TERMS = {
+  series: [
+    ["gta(?:v|iv|o|sa|vc)?"],
+    ["grand", "theft", "auto"],
+    ["гта"],
+    ["グラセフ"],
+    ["グランド", "セフト", "オート"],
+    ["侠盗猎车手"],
+    ["俠盜獵車手"],
+    ["그랜드", "테프트", "오토"],
+    ["جي", "تي", "[اأ]ي"],
+    ["जीटीए"],
+  ],
+  studio: [
+    ["rockstar", "games"],
+    ["rockstar", "north"],
+    ["rockstar['’]s"],
+    ["r\\*"],
+    ["take", "two", "interactive"],
+    ["sam", "houser"],
+    ["dan", "houser"],
+    ["rob", "nelson"],
+    ["aaron", "garbut"],
+    ["imran", "sarwar"],
+    ["leslie", "benzies"],
+    ["jennifer", "kolbe"],
+    ["strauss", "zelnick"],
+    ["lazlow"],
+  ],
+  insiders: [
+    ["tez2"],
+    ["yan2295"],
+    ["videotech(?:uk)?"],
+    ["cyberleek"],
+    ["kiwitalkz"],
+    ["lucas7yoshi"],
+    ["teapotuberhacker"],
+    ["arion", "kurtaj"],
+    ["rockstar", "intel"],
+    ["gtabase"],
+    ["gtaforums"],
+  ],
+  leonida: [
+    ["ambrosia"],
+    ["andr[eé]s", "de", "le[oó]n"],
+    ["megamundo"],
+    ["stefanie", "gates"],
+    ["petra", "navarro"],
+    ["high", "rollerz"],
+    ["dad", "bod", "squad"],
+    ["ammu", "nation"],
+  ],
+  universe: [
+    ["los", "santos"],
+    ["liberty", "city"],
+    ["san", "andreas"],
+    ["vinewood"],
+    ["blaine", "county"],
+    ["niko", "bellic"],
+    ["tommy", "vercetti"],
+    ["trevor", "philips"],
+    ["franklin", "clinton"],
+    ["michael", "de", "santa"],
+    ["cluckin['’]?", "bell"],
+    ["burger", "shot"],
+    ["sprunk"],
+    ["pi(?:ß|ss)wasser"],
+    ["lifeinvader"],
+    ["weazel", "news"],
+    ["bleeter"],
+  ],
+};
 
 const SEP = "[\\s\\-_.+:'’#·•・]*";
 const LETTER = "[\\p{Script=Latin}\\p{Script=Cyrillic}\\p{Script=Greek}]";
@@ -95,7 +166,10 @@ const EXPLICIT = compile(
   Object.values(EXPLICIT_TERMS).flat(),
   `(?!${WORD_CHAR})`,
 );
-const FRANCHISE = compile(FRANCHISE_TERMS, `(?!${LETTER})`);
+const FRANCHISE = compile(
+  Object.values(FRANCHISE_TERMS).flat(),
+  `(?!${LETTER})`,
+);
 
 const ROCKSTAR_SOURCES = [
   /^https?:\/\/(?:www\.)?rockstargames\.com(?:[/?#]|$)/i,

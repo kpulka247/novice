@@ -1,4 +1,5 @@
 import path from "node:path";
+import webpack from "webpack";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import CopyPlugin from "copy-webpack-plugin";
@@ -6,6 +7,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import ZipPlugin from "zip-webpack-plugin";
 import RemoveEmptyScriptsPlugin from "webpack-remove-empty-scripts";
+import { MESSAGES } from "./src/locales.js";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const { version } = JSON.parse(readFileSync(path.join(root, "package.json")));
@@ -33,10 +35,34 @@ function buildManifest(content, browser) {
     version,
     ...BROWSER_MANIFEST[browser],
   };
-  if (manifest.description.length > 132) {
-    throw new Error("Store descriptions are limited to 132 characters");
-  }
   return JSON.stringify(manifest, null, 2);
+}
+
+class LocalesPlugin {
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap("LocalesPlugin", (compilation) => {
+      compilation.hooks.processAssets.tap(
+        {
+          name: "LocalesPlugin",
+          stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+        },
+        () => {
+          for (const [locale, messages] of Object.entries(MESSAGES)) {
+            const json = Object.fromEntries(
+              Object.entries(messages).map(([key, message]) => [
+                key,
+                { message },
+              ]),
+            );
+            compilation.emitAsset(
+              `_locales/${locale}/messages.json`,
+              new webpack.sources.RawSource(JSON.stringify(json, null, 2)),
+            );
+          }
+        },
+      );
+    });
+  }
 }
 
 const createConfig = (browser, mode) => {
@@ -88,6 +114,7 @@ const createConfig = (browser, mode) => {
           { from: "src/popup/popup.html", to: "popup.html" },
         ],
       }),
+      new LocalesPlugin(),
       new RemoveEmptyScriptsPlugin(),
       isProduction &&
         new ZipPlugin({

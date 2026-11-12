@@ -18,14 +18,15 @@ It works the moment you install it. There is nothing to set up.
 
 What it blurs:
 • Every spelling of the title, in every script: GTA 6, GTA VI, gta6, #GTA6, ГТА 6, グラセフ6, 侠盗猎车手6, and more
-• The main characters, the state of Leonida, and its cities
+• Every character, business, region, and district Rockstar has shown so far
+• In strict mode, Rockstar and Take-Two leaders, and the insiders and leakers who post GTA VI news
 • Spoiler phrases such as "Jason dies" or "Lucia ending"
 • Rockstar Games' own website and social accounts, which are full of GTA VI art
 • In strict mode (on by default), any post about GTA or Rockstar, because many hide GTA VI behind "See more"
 
 How it works:
 • Blurs spoilers in place, or removes them from the page if you prefer
-• Labels each one: "GTA VI spoiler" when it names GTA VI, "GTA or Rockstar post" when strict mode caught it
+• Tags each one in its corner: "GTA VI" when it names GTA VI, "GTA" when strict mode caught it
 • Reads Facebook posts in full, so nothing hides behind "See more"
 • Blurs whole video tiles, posts, comments, and search results in place on YouTube, Reddit, X, Facebook, Instagram, TikTok, Twitch, Google, Bing, DuckDuckGo, and Steam
 • Blurs the matching card, list item, or paragraph on every other site

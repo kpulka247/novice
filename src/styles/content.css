@@ -29,7 +29,7 @@
 [data-gta6sb="blur"]::after {
   content: attr(data-gta6sb-hint) !important;
   position: absolute !important;
-  top: 8px !important;
+  top: max(0px, min(8px, calc(50% - 10px))) !important;
   inset-inline-start: 8px !important;
   right: auto;
   bottom: auto !important;
@@ -98,14 +98,13 @@
 [data-gta6sb="blur"][data-gta6sb-size="s"]:hover::after,
 [data-gta6sb="blur"][data-gta6sb-size="s"]:focus-visible::after {
   content: "" !important;
-  top: 50% !important;
-  inset-inline-start: 3px !important;
+  top: max(0px, min(6px, calc(50% - 3px))) !important;
+  inset-inline-start: 6px !important;
   width: 6px !important;
   height: 6px !important;
   padding: 0 !important;
   border: none !important;
   border-radius: 50% !important;
-  transform: translateY(-50%) !important;
   background: var(--gta6sb-dot) !important;
   box-shadow: 0 0 0 2px rgba(13, 11, 20, 0.45) !important;
 }

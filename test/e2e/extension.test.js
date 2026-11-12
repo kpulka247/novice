@@ -142,6 +142,52 @@ test("tags say what was found and slide open on hover", async () => {
   await page.close();
 });
 
+test("a card is blurred whole, with its image, and its neighbours stay clear", async () => {
+  const page = await openFeed();
+  assert.equal(await stateOf(page, "gcard"), "blur");
+  assert.equal(
+    await page.$eval("#gcard", (el) => el.getAttribute("data-gta6sb")),
+    "blur",
+    "the card itself is the blurred unit, so its thumbnail is covered",
+  );
+  for (const id of ["gcard-safe-1", "gcard-safe-2", "gcard-safe-3"]) {
+    assert.equal(await stateOf(page, id), "visible", id);
+  }
+  await page.close();
+});
+
+test("tags and dots sit in the top-left corner, centered only on thin rows", async () => {
+  const page = await openFeed();
+  const place = (id) =>
+    page.$eval(`#${id}`, (el) => {
+      const unit = el.closest("[data-gta6sb]");
+      const after = getComputedStyle(unit, "::after");
+      return {
+        size: unit.getAttribute("data-gta6sb-size"),
+        top: parseFloat(after.top),
+        left: parseFloat(after.left),
+        height: parseFloat(after.height) + parseFloat(after.paddingTop) * 2,
+        unitHeight: unit.getBoundingClientRect().height,
+      };
+    });
+
+  const narrow = await place("narrow");
+  assert.equal(narrow.size, "m", "84px wide fits a tag");
+  assert.equal(narrow.top, 8, "a tall box keeps its tag in the corner");
+
+  const thin = await place("thin");
+  assert.equal(thin.size, "m", "a 32px row fits a tag");
+  assert.equal(thin.top, (thin.unitHeight - thin.height) / 2, "centered");
+
+  const line = await place("trailer");
+  assert.equal(line.size, "s", "one line of text gets a dot");
+  assert.ok(
+    line.top <= 6 && line.left <= 8,
+    `corner: ${line.top},${line.left}`,
+  );
+  await page.close();
+});
+
 test("remove mode takes spoilers out of the page", async () => {
   const page = await openFeed();
   await setSettings({ style: "hide" });

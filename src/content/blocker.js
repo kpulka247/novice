@@ -39,7 +39,7 @@ const MAX_EXPANDER_TEXT = 40;
 
 const TAGS = { gta6: "GTA VI", franchise: "GTA" };
 const SHOW = ext.i18n.getMessage("show");
-const SMALL = { height: 36, width: 140 };
+const SMALL = { height: 24, width: 72 };
 
 const hintFor = (level) => `${TAGS[level]} · ${SHOW}`;
 

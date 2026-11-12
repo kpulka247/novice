@@ -146,6 +146,9 @@ const GENERIC_UNITS = [
 const SMALL_BLOCKS = "p,h1,h2,h3,h4,h5,h6,a,figcaption,dt,td,span,div";
 
 const MAX_UNIT_TEXT = 3000;
+const CARD_TEXT = 300;
+const CARD_MEDIA = 3;
+const MEDIA = "img,video,picture,canvas";
 const PAGE_ROOTS = new Set(["HTML", "BODY", "MAIN"]);
 
 const siteFor = (host) => SITE_UNITS.find(({ hosts }) => hosts.test(host));
@@ -174,6 +177,20 @@ function isContained(element) {
   );
 }
 
+function growToCard(block) {
+  let card = block;
+  for (
+    let parent = block.parentElement;
+    parent && !PAGE_ROOTS.has(parent.tagName);
+    parent = parent.parentElement
+  ) {
+    if (parent.textContent.length > CARD_TEXT) break;
+    if (parent.querySelectorAll(MEDIA).length > CARD_MEDIA) break;
+    card = parent;
+  }
+  return card;
+}
+
 export function findUnit(element, host) {
   const siteSelector = unitSelectorFor(host);
   const siteUnit = siteSelector && element.closest(siteSelector);
@@ -183,7 +200,7 @@ export function findUnit(element, host) {
   if (genericUnit && isContained(genericUnit)) return genericUnit;
 
   const block = element.closest(SMALL_BLOCKS);
-  if (block && isContained(block)) return block;
+  if (block && isContained(block)) return growToCard(block);
 
   return PAGE_ROOTS.has(element.tagName) ? null : element;
 }

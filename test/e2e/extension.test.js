@@ -95,50 +95,59 @@ test("blurs GTA VI units and leaves everything else", async () => {
     assert.equal(await stateOf(page, id), "visible", `${id} should stay clear`);
   }
   assert.equal(
-    await page.$eval("#trailer", (el) => el.getAttribute("data-gta6sb-hint")),
-    "GTA VI · Show",
+    await page.$eval("#trailer", (el) => el.getAttribute("data-gta6sb-tag")),
+    "GTA VI",
   );
   await page.close();
 });
 
-test("tags say what was found and slide open on hover", async () => {
+test("tags say what was found and slide Show open on hover", async () => {
   const page = await openFeed();
   assert.equal(await levelOf(page, "trailer"), "gta6");
   assert.equal(await levelOf(page, "fb-helicopters"), "franchise");
 
   const chip = (id) =>
     page.$eval(`#${id}`, (el) => {
-      const after = getComputedStyle(el, "::after");
+      const tag = getComputedStyle(el, "::before");
+      const show = getComputedStyle(el, "::after");
       return {
         size: el.getAttribute("data-gta6sb-size"),
-        content: after.content,
-        width: parseFloat(after.width),
+        tag: tag.content,
+        tagWidth: parseFloat(tag.width),
+        icon: tag.backgroundImage.includes("M3 3l18 18") ? "eye-off" : "eye",
+        show: show.content,
+        showWidth: parseFloat(show.width),
       };
     });
   const vars = await page.evaluate(() => {
     const root = getComputedStyle(document.documentElement);
     return {
       tag: parseFloat(root.getPropertyValue("--gta6sb-chip-gta6")),
-      hint: parseFloat(root.getPropertyValue("--gta6sb-chip-gta6-hint")),
+      show: parseFloat(root.getPropertyValue("--gta6sb-chip-show")),
     };
   });
 
   const small = await chip("trailer");
-  assert.equal(small.size, "s", "one line of text gets a dot");
-  assert.equal(small.content, '""');
+  assert.equal(small.size, "s", "one line of text gets an icon only");
+  assert.equal(small.tag, '""');
+  assert.equal(small.icon, "eye-off");
 
   const card = await chip("card");
   assert.equal(card.size, "m");
-  assert.equal(card.content, '"GTA VI · Show"');
-  assert.ok(vars.tag > 0 && vars.hint > vars.tag);
-  assert.equal(card.width, vars.tag, "only GTA VI is visible at rest");
+  assert.equal(card.tag, '"GTA VI"');
+  assert.equal(card.show, '"Show"');
+  assert.equal(card.icon, "eye-off");
+  assert.equal(card.tagWidth, vars.tag);
+  assert.equal(card.showWidth, 0, "Show is hidden at rest");
 
   await page.hover("#card");
   await page.waitForTimeout(80);
-  const midway = (await chip("card")).width;
-  assert.ok(midway > vars.tag && midway < vars.hint, `slides: ${midway}`);
+  const midway = (await chip("card")).showWidth;
+  assert.ok(midway > 0 && midway < vars.show, `slides: ${midway}`);
   await page.waitForTimeout(500);
-  assert.equal((await chip("card")).width, vars.hint, "Show is fully visible");
+  const open = await chip("card");
+  assert.equal(open.showWidth, vars.show, "Show is fully visible");
+  assert.equal(open.icon, "eye", "the icon opens on hover");
   await page.close();
 });
 
@@ -161,7 +170,7 @@ test("tags and dots sit in the top-left corner, centered only on thin rows", asy
   const place = (id) =>
     page.$eval(`#${id}`, (el) => {
       const unit = el.closest("[data-gta6sb]");
-      const after = getComputedStyle(unit, "::after");
+      const after = getComputedStyle(unit, "::before");
       return {
         size: unit.getAttribute("data-gta6sb-size"),
         top: parseFloat(after.top),

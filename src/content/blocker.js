@@ -9,7 +9,8 @@ const BLURRED = `[${STATE}="blur"]`;
 const REVEALED = `[${STATE}="revealed"]`;
 const SETTLED = `${REVEALED},[${LEVEL}="gta6"]`;
 const ANCHOR = "data-gta6sb-anchor";
-const HINT = "data-gta6sb-hint";
+const TAG = "data-gta6sb-tag";
+const SHOW_LABEL = "data-gta6sb-show";
 const SIZE = "data-gta6sb-size";
 const ADDED = "data-gta6sb-added";
 const OFFSET_X = "--gta6sb-x";
@@ -84,8 +85,6 @@ function contentOffset(unit, box) {
   };
 }
 
-const hintFor = (level) => `${TAGS[level]} · ${SHOW}`;
-
 function installChipWidths() {
   const font = getComputedStyle(document.documentElement)
     .getPropertyValue("--gta6sb-chip-font")
@@ -94,12 +93,10 @@ function installChipWidths() {
   context.font = font;
   const width = (text) => `${Math.ceil(context.measureText(text).width)}px`;
   const style = document.createElement("style");
-  style.textContent = `:root {${Object.keys(TAGS)
-    .map(
-      (level) =>
-        `--gta6sb-chip-${level}: ${width(TAGS[level])}; --gta6sb-chip-${level}-hint: ${width(hintFor(level))};`,
-    )
-    .join(" ")}}`;
+  const tags = Object.entries(TAGS)
+    .map(([level, tag]) => `--gta6sb-chip-${level}: ${width(tag)};`)
+    .join(" ");
+  style.textContent = `:root { ${tags} --gta6sb-chip-show: ${width(SHOW)}; }`;
   document.documentElement.append(style);
 }
 
@@ -133,8 +130,10 @@ export function createBlocker(host) {
 
   function label(unit, level) {
     unit.setAttribute(LEVEL, level);
-    if (unit.getAttribute(STATE) === "blur")
-      unit.setAttribute(HINT, hintFor(level));
+    if (unit.getAttribute(STATE) === "blur") {
+      unit.setAttribute(TAG, TAGS[level]);
+      unit.setAttribute(SHOW_LABEL, SHOW);
+    }
   }
 
   function cover(unit, level) {
@@ -183,7 +182,7 @@ export function createBlocker(host) {
     unit.style.removeProperty(OFFSET_X);
     unit.style.removeProperty(OFFSET_Y);
     const added = unit.getAttribute(ADDED)?.split(" ").filter(Boolean) ?? [];
-    [...added, ANCHOR, HINT, SIZE, ADDED, LEVEL].forEach((a) =>
+    [...added, ANCHOR, TAG, SHOW_LABEL, SIZE, ADDED, LEVEL].forEach((a) =>
       unit.removeAttribute(a),
     );
     if (nextState) unit.setAttribute(STATE, nextState);

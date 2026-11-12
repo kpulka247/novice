@@ -12,38 +12,30 @@ Blurs GTA 6 trailers, leaks, videos, posts and story spoilers across the web so 
 
 ## Description
 
-Want to play Grand Theft Auto VI knowing nothing about it? Once the game is out, its story, characters, and ending will be on every feed, search page, and news site. GTA 6 Spoiler Blocker blurs them before you see them, and leaves the rest of the internet alone. Click a blurred post to see it.
+Blurs GTA 6 spoilers across the web, so you can play Grand Theft Auto VI knowing nothing about it.
 
-It works the moment you install it. There is nothing to set up.
+Trailers, leaks, story details, and endings show up on every feed, search page, and news site. This extension blurs them before you see them and leaves the rest of the internet alone. Click any blurred post to see it. It works the moment you install it, with nothing to set up!
 
-What it blurs:
-• Every spelling of the title, in every script: GTA 6, GTA VI, gta6, #GTA6, ГТА 6, グラセフ6, 侠盗猎车手6, and more
-• Every character, business, region, and district Rockstar has shown so far
-• In strict mode, Rockstar and Take-Two leaders, and the insiders and leakers who post GTA VI news
-• Spoiler phrases such as "Jason dies" or "Lucia ending"
-• Rockstar Games' own website and social accounts, which are full of GTA VI art
-• In strict mode (on by default), any post about GTA or Rockstar, because many hide GTA VI behind "See more"
+Features:
+🌫️ Blur or remove. Spoilers blur in place with a small tag, or disappear from the page if you prefer.
+🧠 Knows the game. Every spelling of the title in every script, the characters and places of Leonida, and Rockstar's own channels.
+🎯 Strict mode. Also catches GTA and Rockstar posts, insiders, and leakers that hide GTA VI behind "See more".
+🌅 Covers whole pages. Trailers, reviews, and wikis about GTA VI get a see-through cover, and their videos pause.
+🌍 20 languages. The popup and labels follow your browser language.
+🔒 Private. Everything runs on your device. Nothing is collected or sent anywhere.
+🆕 Automatic updates. New terms and fixes are released regularly.
 
-How it works:
-• Blurs spoilers in place, or removes them from the page if you prefer
-• Tags each one in its corner: "GTA VI" when it names GTA VI, "GTA" when strict mode caught it
-• Reads Facebook posts in full, so nothing hides behind "See more"
-• Blurs whole video tiles, posts, comments, and search results in place on YouTube, Reddit, X, Facebook, Instagram, TikTok, Twitch, Google, Bing, DuckDuckGo, and Steam
-• Blurs the matching card, list item, or paragraph on every other site
-• Covers pages that are about GTA VI with a see-through blur and pauses their videos
-• Shows how many spoilers are blurred on the toolbar icon
-• Speaks 20 languages
+Works on every website, with extra support for:
+- YouTube, Reddit, X, Facebook, Instagram, TikTok
+- Twitch, Steam, Google, Bing, DuckDuckGo
 
-You stay in control:
-• Click any blurred post to see it
-• Choose blur or remove, turn strict mode off, or turn protection off for one site or everywhere, from the popup
-• Choose "Show anyway" on any covered page
+You stay in control. Click the toolbar icon to switch between blur and remove, turn strict mode off, or turn the extension off for one site.
 
-Privacy: everything runs on your device. The extension collects no data, sends nothing anywhere, and has no analytics.
+Changelog: https://github.com/kpulka247/gta6-spoiler-blocker/blob/main/CHANGELOG.md
 
-Source code: https://github.com/kpulka247/gta6-spoiler-blocker
+Unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive.
 
-This is an unofficial fan project. It is not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive.
+If you like the extension, please rate it. I would be very grateful and happy to develop it further! ;)
 
 ## Category
 

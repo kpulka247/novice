@@ -1,0 +1,50 @@
+GTA 6 Spoiler Blocker
+Copyright (c) 2026 Kamil Pułka. All rights reserved.
+
+This repository is public so that people can read the code, report problems,
+and contribute fixes. It is source-available, not open source. Only the
+copyright holder publishes the extension.
+
+PERMISSIONS
+
+You may, free of charge:
+
+1. View and study the source code.
+2. Fork this repository on GitHub and change your fork, only to prepare
+   contributions (issues and pull requests) to this repository.
+3. Build and run the extension on your own devices, only to use it personally
+   or to develop and test contributions.
+
+RESTRICTIONS
+
+Unless the copyright holder gives you written permission, you may not:
+
+1. Publish, distribute, sublicense, or sell the extension, a modified version
+   of it, or a substantial part of its code. This includes the Chrome Web
+   Store, Firefox Add-ons, Microsoft Edge Add-ons, Opera Add-ons, any other
+   extension store, and any website or file-sharing service.
+2. Use the name "GTA 6 Spoiler Blocker", its logo, its icons, its store
+   graphics, or its store listing text for any other product or listing.
+3. Remove or change this notice or any copyright notice in the code.
+
+CONTRIBUTIONS
+
+By submitting a pull request, a patch, or any other contribution, you confirm
+that you have the right to submit it. You grant the copyright holder a
+perpetual, worldwide, royalty-free, irrevocable license to use, change,
+publish, and relicense your contribution as part of this project.
+
+THIRD-PARTY MARKS
+
+Grand Theft Auto, GTA, and Rockstar Games are trademarks of Take-Two
+Interactive Software, Inc. This project is not affiliated with, endorsed by,
+or sponsored by Rockstar Games or Take-Two Interactive.
+
+NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

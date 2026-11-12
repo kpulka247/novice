@@ -1,0 +1,15 @@
+.env
+
+# Node dependencies
+node_modules/
+npm-debug.log
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# Build directories
+dist/
+dist-*/

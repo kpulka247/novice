@@ -17,18 +17,30 @@ const SPOILERS = [
   "grand theft auto six review",
   "Rockstar VI gameplay",
   "Обзор ГТА 6",
+  "Огляд ГТА 6",
   "グランド・セフト・オートVI",
   "日本語GTA6の発売日",
+  "グラセフ6の新情報",
+  "侠盗猎车手6 发售日期",
+  "俠盜獵車手6",
+  "侠盗猎车手六",
+  "그랜드 테프트 오토 6 출시",
+  "جي تي أي 6",
+  "जीटीए 6 ट्रेलर",
   "Jason Duval",
   "Lucia Caminos",
   "Jason and Lucia",
   "jason & lucia",
   "Lucia y Jason",
   "Jason i Lucia",
+  "Джейсон и Люсия",
+  "ジェイソンとルシア",
   "Dre'Quan Priest",
   "Boobie Ike",
   "Welcome to Leonida",
   "Vice City nights",
+  "Вайс-Сити",
+  "罪恶都市",
   "Port Gellhorn",
   "Grassrivers",
   "Mount Kalaga National Park",
@@ -36,6 +48,10 @@ const SPOILERS = [
   "Lucia killed",
   "lucia betrayal",
   "jason ending",
+  "Jason muere",
+  "Lucia stirbt",
+  "Jason ginie",
+  "Джейсон умирает",
 ];
 
 const SAFE = [
@@ -54,6 +70,30 @@ const SAFE = [
   "I saw Jason. Lucia was there too.",
   "Miami Vice",
   "agta6x",
+  "Rockstar Games",
+  "All GTA helicopters",
+];
+
+const FRANCHISE_ONLY = [
+  "All GTA helicopters",
+  "Rockstar's weapon UI has changed a lot over the years",
+  "Rockstar Games · Join",
+  "GTA 5 online update",
+  "GTA5 mods",
+  "GTAV",
+  "Grand Theft Auto V",
+  "Обзор ГТА",
+  "侠盗猎车手",
+  "グラセフ",
+];
+
+const SAFE_EVEN_STRICT = [
+  "Greatest hits",
+  "rockstar energy",
+  "coding rockstars",
+  "agtax",
+  "Rockstar developer wanted",
+  "212GB. Your PS5 is NOT ready",
 ];
 
 for (const text of SPOILERS) {
@@ -62,6 +102,16 @@ for (const text of SPOILERS) {
 
 for (const text of SAFE) {
   test(`allows: ${text}`, () => assert.equal(mentionsGta6(text), false));
+}
+
+for (const text of FRANCHISE_ONLY) {
+  test(`strict blocks: ${text}`, () =>
+    assert.equal(mentionsGta6(text, { strict: true }), true));
+}
+
+for (const text of SAFE_EVEN_STRICT) {
+  test(`strict allows: ${text}`, () =>
+    assert.equal(mentionsGta6(text, { strict: true }), false));
 }
 
 test("blocks GTA VI URLs", () => {
@@ -76,11 +126,22 @@ test("blocks GTA VI URLs", () => {
     "https://www.reddit.com/r/GTA6/",
     "https://www.google.com/search?q=gta+6+ending",
     "https://www.youtube.com/results?search_query=grand%20theft%20auto%20vi",
+    "https://www.baidu.com/s?wd=%E4%BE%A0%E7%9B%97%E7%8C%8E%E8%BD%A6%E6%89%8B6",
     "https://www.ign.com/articles/gta-6-review",
     "https://en.wikipedia.org/wiki/Grand_Theft_Auto_VI",
   ]) {
     assert.equal(urlMentionsGta6(url), true, url);
   }
+});
+
+test("franchise terms never match URLs, which often echo the current search", () => {
+  assert.equal(
+    urlMentionsGta6(
+      "https://consent.youtube.com/m?continue=https%3A%2F%2Fwww.youtube.com%2Fresults%3Fsearch_query%3Drockstar%2Bgames",
+    ),
+    false,
+  );
+  assert.equal(urlMentionsGta6("https://example.com/gta-5-mods"), false);
 });
 
 test("allows other URLs", () => {
@@ -92,6 +153,7 @@ test("allows other URLs", () => {
     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     "https://example.com/?lang=vi",
     "https://example.com/%E0%A4%A",
+    "https://www.gtabase.com/",
   ]) {
     assert.equal(urlMentionsGta6(url), false, url);
   }

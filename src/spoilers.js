@@ -1,14 +1,30 @@
-const SIX = "(?:6|vi|six|ⅵ)";
-const AND = "(?:and|&|n|y|i|e|et|und)";
-const DIES =
-  "(?:dies|died|dying|death|dead|killed|kills|murdered|ending|endings|betrayal|betrays|betrayed|fate|arrested|jailed)";
+const SIX = "(?:6|vi|six|ⅵ|六|٦|۶|६)";
+const AND = "(?:and|&|n|y|i|e|et|und|и|і|と|和|과|와|و)";
+const DIES = `(?:${[
+  "dies|died|dying|death|dead|killed|kills|murdered|ending|endings|betrayal|betrays|betrayed|fate|arrested|jailed",
+  "muere|murió|muerte|final|traición",
+  "meurt|mort|fin|trahison",
+  "stirbt|tod|ende|verrat",
+  "muore|morte|tradimento",
+  "morre|morreu",
+  "ginie|zginął|zginie|śmierć|umiera|zakończenie|zdrada",
+  "умирает|умер|умрет|смерть|концовка|предательство",
+  "ölüyor|ölümü|sonu",
+].join("|")})`;
 
-export const TERM_GROUPS = {
+const EXPLICIT_TERMS = {
   title: [
     ["gta", SIX],
     ["grand", "theft", "auto", SIX],
     ["гта", SIX],
     ["グランド", "セフト", "オート", SIX],
+    ["グラセフ", SIX],
+    ["侠盗猎车手", SIX],
+    ["俠盜獵車手", SIX],
+    ["그랜드", "테프트", "오토", SIX],
+    ["جي", "تي", "[اأ]ي", SIX],
+    ["جراند", "ثفت", "[اأ]وتو", SIX],
+    ["जीटीए", SIX],
     ["rockstar", "(?:6|vi)"],
   ],
   characters: [
@@ -16,6 +32,10 @@ export const TERM_GROUPS = {
     ["lucia", "caminos"],
     ["jason", AND, "lucia"],
     ["lucia", AND, "jason"],
+    ["джейсон", AND, "лю[сч]ия"],
+    ["ジェイソン", AND, "ルシア"],
+    ["杰森", AND, "露西亚"],
+    ["제이슨", AND, "루시아"],
     ["cal", "hampton"],
     ["boobie", "ike"],
     ["dre", "quan", "priest"],
@@ -25,27 +45,57 @@ export const TERM_GROUPS = {
   ],
   places: [
     ["leonida"],
+    ["レオニダ"],
+    ["莱昂尼达"],
+    ["레오니다"],
     ["vice", "city"],
+    ["вайс", "сити"],
+    ["バイス", "シティ"],
+    ["罪恶都市"],
+    ["罪惡都市"],
+    ["바이스", "시티"],
     ["port", "gellhorn"],
     ["grass", "rivers"],
     ["mount", "kalaga"],
   ],
-  spoilers: [["(?:jason|lucia)", DIES]],
+  spoilers: [
+    ["(?:jason|lucia)", DIES],
+    ["(?:джейсон|лю[сч]ия)", DIES],
+  ],
 };
 
+const FRANCHISE_TERMS = [
+  ["gta(?:v|iv|o|sa|vc)?"],
+  ["grand", "theft", "auto"],
+  ["гта"],
+  ["グラセフ"],
+  ["グランド", "セフト", "オート"],
+  ["侠盗猎车手"],
+  ["俠盜獵車手"],
+  ["그랜드", "테프트", "오토"],
+  ["جي", "تي", "[اأ]ي"],
+  ["जीटीए"],
+  ["rockstar", "games"],
+  ["rockstar['’]s"],
+];
+
 const SEP = "[\\s\\-_.+:'’#·•・]*";
-const WORD_CHAR =
-  "[\\p{Script=Latin}\\p{Script=Cyrillic}\\p{Script=Greek}\\p{N}]";
+const LETTER = "[\\p{Script=Latin}\\p{Script=Cyrillic}\\p{Script=Greek}]";
+const WORD_CHAR = `(?:${LETTER}|\\p{N})`;
 const START = `(?<!${WORD_CHAR})`;
-const END = `(?!${WORD_CHAR})`;
-const INVISIBLE = /[­​-‍⁠﻿]/g;
+const INVISIBLE = /[\u00AD\u200B-\u200D\u2060\uFEFF]/g;
 
-const termSource = (words) => START + words.join(SEP) + END;
+const compile = (terms, end) =>
+  new RegExp(
+    terms.map((words) => START + words.join(SEP) + end).join("|"),
+    "iu",
+  );
 
-const PATTERN = new RegExp(
-  Object.values(TERM_GROUPS).flat().map(termSource).join("|"),
-  "iu",
+const EXPLICIT = compile(
+  Object.values(EXPLICIT_TERMS).flat(),
+  `(?!${WORD_CHAR})`,
 );
+const FRANCHISE = compile(FRANCHISE_TERMS, `(?!${LETTER})`);
 
 const ROCKSTAR_SOURCES = [
   /^https?:\/\/(?:www\.)?rockstargames\.com(?:[/?#]|$)/i,
@@ -56,16 +106,24 @@ const ROCKSTAR_SOURCES = [
   /^https?:\/\/(?:www\.)?twitch\.tv\/rockstargames(?:[/?#]|$)/i,
 ];
 
-export function mentionsGta6(text) {
+const clean = (text) => text.normalize("NFKC").replace(INVISIBLE, "");
+
+function decodeUrl(url) {
+  try {
+    return decodeURIComponent(url.replace(/\+/g, " "));
+  } catch {
+    return url;
+  }
+}
+
+export function mentionsGta6(text, { strict = false } = {}) {
   if (!text) return false;
-  return PATTERN.test(text.normalize("NFKC").replace(INVISIBLE, ""));
+  const cleaned = clean(text);
+  return EXPLICIT.test(cleaned) || (strict && FRANCHISE.test(cleaned));
 }
 
 export function urlMentionsGta6(url) {
+  if (!url) return false;
   if (ROCKSTAR_SOURCES.some((source) => source.test(url))) return true;
-  let decoded = url;
-  try {
-    decoded = decodeURIComponent(url.replace(/\+/g, " "));
-  } catch {}
-  return mentionsGta6(decoded);
+  return mentionsGta6(decodeUrl(url));
 }

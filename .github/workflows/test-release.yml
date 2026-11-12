@@ -1,0 +1,80 @@
+name: Test Release
+
+on: workflow_dispatch
+
+jobs:
+  test-release:
+    name: Simulate Release & Build
+    runs-on: ubuntu-latest
+    outputs:
+      new_release_version: ${{ steps.semantic_dry_run.outputs.new_release_version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Simulate Release and Build (Dry Run)
+        id: semantic_dry_run
+        run: pnpm exec semantic-release --dry-run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload build artifacts
+        if: steps.semantic_dry_run.outputs.new_release_version != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build-artifacts
+          path: dist/
+
+  test-publish-chrome:
+    name: Simulate Publish to Chrome
+    needs: test-release
+    runs-on: ubuntu-latest
+    if: needs.test-release.outputs.new_release_version != ''
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test-build-artifacts
+          path: ./dist
+
+      - name: Simulate Publish Step
+        run: |
+          echo "✅ Successfully downloaded artifacts."
+          echo "ℹ️ Would publish file: dist/gta6spoilerblocker-${{ needs.test-release.outputs.new_release_version }}-chrome.zip"
+          echo "✅ Chrome publish simulation complete."
+
+  test-publish-firefox:
+    name: Simulate Publish to Firefox
+    needs: test-release
+    runs-on: ubuntu-latest
+    if: needs.test-release.outputs.new_release_version != ''
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test-build-artifacts
+          path: ./dist
+
+      - name: Simulate Publish Step
+        run: |
+          echo "✅ Successfully downloaded artifacts."
+          echo "ℹ️ Would sign and publish from source directory: dist/gta6spoilerblocker-firefox"
+          echo "✅ Firefox publish simulation complete."

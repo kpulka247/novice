@@ -4,12 +4,13 @@ Every merge to `main` builds a release and uploads it to the Chrome Web Store an
 
 ## 1. Create the first release on GitHub
 
-1. Make sure the workflow can push the release commit and tag. In the GitHub repository, open **Settings > Actions > General** and set **Workflow permissions** to **Read and write permissions**.
-2. Push both branches:
+1. Create the repository `kpulka247/gta6-spoiler-blocker` on GitHub if it does not exist yet. Keep it empty: no README, license, or `.gitignore`.
+2. Make sure the workflow can push the release commit and tag. In the GitHub repository, open **Settings > Actions > General** and set **Workflow permissions** to **Read and write permissions**.
+3. Push both branches:
    ```bash
    git push -u origin main dev
    ```
-3. Open the **Actions** tab and wait for the **Release** workflow. It creates the tag `v1.0.0`, a GitHub Release with `gta6spoilerblocker-1.0.0-chrome.zip` and `gta6spoilerblocker-1.0.0-firefox.zip`, and a `CHANGELOG.md` commit.
+4. Open the **Actions** tab and wait for the **Release** workflow. It creates the tag `v1.0.0`, a GitHub Release with `gta6spoilerblocker-1.0.0-chrome.zip` and `gta6spoilerblocker-1.0.0-firefox.zip`, and a `CHANGELOG.md` commit.
 
 The two publish jobs finish with a notice that says the store secrets are not set. That is expected.
 
@@ -29,13 +30,14 @@ The two publish jobs finish with a notice that says the store secrets are not se
 4. On **Privacy**, paste the single purpose, the permission justifications, and the data usage answers from [store-listing.md](store-listing.md).
 5. Click **Submit for review**.
 6. Copy the item ID from the dashboard address. It is the 32-letter string after `/detail/` or `/edit/`.
+7. In `README.md`, replace every `CHROME_EXTENSION_ID` with that ID. The Chrome badges and links start working once the listing is public.
 
 ## 3. Upload the first version to Firefox Add-ons
 
 1. Open the [Firefox Add-on Developer Hub](https://addons.mozilla.org/developers/) and click **Submit a New Add-on**.
 2. Choose **On this site** and upload `gta6spoilerblocker-1.0.0-firefox.zip`.
 3. When the form asks whether you use a build tool or minifier, answer **Yes**. Upload **Source code (zip)** from the same GitHub Release. Reviewers build it with `pnpm install && pnpm build`, as the README says.
-4. Fill in the listing from [store-listing.md](store-listing.md). Choose the **GNU General Public License v3.0**, and upload the same five screenshots.
+4. Fill in the listing from [store-listing.md](store-listing.md). Set the add-on URL to `gta6-spoiler-blocker`, because the README badges point to `addons.mozilla.org/firefox/addon/gta6-spoiler-blocker/`. Choose the **GNU General Public License v3.0**, and upload the same five screenshots.
 5. Submit the add-on.
 
 ## 4. Add the repository secrets

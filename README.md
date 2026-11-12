@@ -5,7 +5,7 @@
 <a href="https://github.com/kpulka247/gta6-spoiler-blocker/actions" title="GitHub Actions Workflow Status"><img src="https://img.shields.io/github/actions/workflow/status/kpulka247/gta6-spoiler-blocker/release.yml"></a>
 <a title="Chrome Web Store Size"><img src="https://img.shields.io/chrome-web-store/size/CHROME_EXTENSION_ID"></a>
 <a href="https://github.com/kpulka247/gta6-spoiler-blocker/releases" title="GitHub Release"><img src="https://img.shields.io/github/v/release/kpulka247/gta6-spoiler-blocker?logo=github&logoColor=white"></a>
-<a href="https://github.com/kpulka247/gta6-spoiler-blocker/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/license-source--available-ff3d9a"></a>
+<a href="https://github.com/kpulka247/gta6-spoiler-blocker/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/license-source--available-0d0b14"></a>
 
 <a href="https://chromewebstore.google.com/detail/gta-6-spoiler-blocker/CHROME_EXTENSION_ID" title="Chrome Web Store Users"><img src="https://img.shields.io/chrome-web-store/users/CHROME_EXTENSION_ID?logo=Google%20Chrome&logoColor=white&color=%23ff3d9a"></a>
 <a href="https://chromewebstore.google.com/detail/gta-6-spoiler-blocker/CHROME_EXTENSION_ID" title="Chrome Web Store Rating"><img src="https://img.shields.io/chrome-web-store/rating/CHROME_EXTENSION_ID"></a>

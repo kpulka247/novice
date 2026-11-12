@@ -3,6 +3,7 @@ export const ext = globalThis.browser ?? globalThis.chrome;
 export const DEFAULT_SETTINGS = {
   enabled: true,
   strict: true,
+  style: "blur",
   allowedSites: [],
 };
 

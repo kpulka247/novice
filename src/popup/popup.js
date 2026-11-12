@@ -37,6 +37,10 @@ function render(settings, status) {
   );
   $("strict").checked = settings.strict;
   $("strict").disabled = !settings.enabled;
+  document.querySelectorAll('input[name="style"]').forEach((radio) => {
+    radio.checked = radio.value === settings.style;
+    radio.disabled = !settings.enabled;
+  });
 
   $("site-row").hidden = !status;
   if (!status) {
@@ -66,6 +70,9 @@ async function init() {
   );
   $("strict").addEventListener("change", (e) =>
     updateSettings({ strict: e.target.checked }),
+  );
+  $("style").addEventListener("change", (e) =>
+    updateSettings({ style: e.target.value }),
   );
   $("site").addEventListener("change", (e) => {
     if (status) setSiteAllowed(status.host, !e.target.checked);

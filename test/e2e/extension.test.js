@@ -37,6 +37,12 @@ before(async () => {
     context.serviceWorkers()[0] ??
     (await context.waitForEvent("serviceworker"));
   extensionId = new URL(worker.url()).host;
+  await context.route("https://www.facebook.com/**", async (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: await readFile(path.join(here, "fixtures", "facebook.html")),
+    }),
+  );
 });
 
 after(async () => {
@@ -46,6 +52,11 @@ after(async () => {
 
 const setSettings = (patch) =>
   worker.evaluate((p) => chrome.storage.local.set(p), patch);
+
+const levelOf = (page, id) =>
+  page.$eval(`#${id}`, (el) =>
+    el.closest("[data-gta6sb]")?.getAttribute("data-gta6sb-level"),
+  );
 
 const stateOf = (page, id) =>
   page.$eval(`#${id}`, (el) => {
@@ -88,6 +99,45 @@ test("blurs GTA VI units and leaves everything else", async () => {
     (el) => getComputedStyle(el, "::after").content,
   );
   assert.match(label, /Show/);
+  await page.close();
+});
+
+test("labels say whether a card names GTA VI or only GTA", async () => {
+  const page = await openFeed();
+  assert.equal(await levelOf(page, "trailer"), "gta6");
+  assert.equal(await levelOf(page, "fb-helicopters"), "franchise");
+  const labels = await page.$$eval("#trailer, #fb-helicopters", (els) =>
+    els.map((el) => getComputedStyle(el, "::after").content),
+  );
+  assert.match(labels[0], /GTA VI/);
+  assert.match(labels[1], /GTA/);
+  assert.doesNotMatch(labels[1], /GTA VI/);
+  await page.close();
+});
+
+test("remove mode takes spoilers out of the page", async () => {
+  const page = await openFeed();
+  await setSettings({ style: "hide" });
+  await page.waitForSelector("#trailer[data-gta6sb='hide']", {
+    state: "attached",
+  });
+  assert.equal(await page.isVisible("#trailer"), false);
+  assert.equal(await page.isVisible("#pasta"), true);
+  await setSettings({ style: "blur" });
+  await page.waitForSelector("#trailer[data-gta6sb='blur']", {
+    state: "attached",
+  });
+  await page.close();
+});
+
+test("facebook posts are expanded so text behind See more is checked", async () => {
+  const page = await context.newPage();
+  await page.goto("https://www.facebook.com/");
+  await page.waitForSelector("#logitech[data-gta6sb-level='gta6']", {
+    state: "attached",
+  });
+  assert.equal(await stateOf(page, "logitech"), "blur");
+  assert.equal(await stateOf(page, "cats"), "visible");
   await page.close();
 });
 

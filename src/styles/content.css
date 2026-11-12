@@ -1,5 +1,9 @@
 @import "./tokens.css";
 
+[data-gta6sb="hide"] {
+  display: none !important;
+}
+
 [data-gta6sb="blur"] {
   clip-path: inset(0) !important;
   cursor: pointer !important;
@@ -62,6 +66,26 @@
     radial-gradient(
       circle at 11px 50%,
       var(--gta6sb-pink) 3px,
+      transparent 4px
+    ),
+    var(--gta6sb-ink-glass) !important;
+}
+
+[data-gta6sb="blur"][data-gta6sb-level="franchise"]::after {
+  background:
+    radial-gradient(
+      circle at 15px 50%,
+      var(--gta6sb-teal) 3.5px,
+      transparent 4.5px
+    ),
+    var(--gta6sb-ink-glass) !important;
+}
+
+[data-gta6sb="blur"][data-gta6sb-level="franchise"][data-gta6sb-size="s"]::after {
+  background:
+    radial-gradient(
+      circle at 11px 50%,
+      var(--gta6sb-teal) 3px,
       transparent 4px
     ),
     var(--gta6sb-ink-glass) !important;

@@ -31,6 +31,12 @@ const SITE_UNITS = [
       ".ytSearchboxComponentSuggestion",
       ".sbsb_c",
     ],
+    shelves: [
+      "grid-shelf-view-model",
+      "ytd-reel-shelf-renderer",
+      "ytd-rich-shelf-renderer",
+      "ytd-horizontal-card-list-renderer",
+    ],
   },
   {
     hosts: /(^|\.)reddit\.com$/,
@@ -62,6 +68,11 @@ const SITE_UNITS = [
       "div[role='article']",
       "[data-virtualized]",
       "li",
+    ],
+    expanders: [
+      "[data-ad-rendering-role='story_message'] [role='button']",
+      "[data-ad-preview='message'] [role='button']",
+      "[data-ad-comet-preview='message'] [role='button']",
     ],
   },
   {
@@ -137,9 +148,23 @@ const SMALL_BLOCKS = "p,h1,h2,h3,h4,h5,h6,a,figcaption,dt,td,span,div";
 const MAX_UNIT_TEXT = 3000;
 const PAGE_ROOTS = new Set(["HTML", "BODY", "MAIN"]);
 
+const siteFor = (host) => SITE_UNITS.find(({ hosts }) => hosts.test(host));
+
 function unitSelectorFor(host) {
-  const site = SITE_UNITS.find(({ hosts }) => hosts.test(host));
-  return site?.units.join(",") ?? null;
+  return siteFor(host)?.units.join(",") ?? null;
+}
+
+export function findEmptiedShelf(unit, host, isGone) {
+  const site = siteFor(host);
+  const shelf =
+    site?.shelves && unit.parentElement?.closest(site.shelves.join(","));
+  if (!shelf) return null;
+  const units = [...shelf.querySelectorAll(site.units.join(","))];
+  return units.length > 0 && units.every(isGone) ? shelf : null;
+}
+
+export function expanderSelectorFor(host) {
+  return siteFor(host)?.expanders?.join(",") ?? null;
 }
 
 function isContained(element) {

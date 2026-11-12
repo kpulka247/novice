@@ -64,11 +64,11 @@ function report() {
 function sync() {
   readSiteTitle();
   const active = isActive();
-  const config = active ? `on:${settings.strict}` : "off";
+  const config = active ? `on:${settings.strict}:${settings.style}` : "off";
   if (config !== appliedConfig) {
     appliedConfig = config;
     blocker.clearAll();
-    blocker.setStrict(settings.strict);
+    blocker.configure(settings);
     if (active) blocker.scan(document.documentElement);
   }
   if (active && pageIsAboutGta6()) {
@@ -99,6 +99,7 @@ function handleMutations(records) {
 }
 
 function revealOnActivate(event) {
+  if (!event.isTrusted) return;
   const unit = blocker.blurredUnitAt(event.target);
   if (!unit) return;
   if (event.type === "keydown" && event.key !== "Enter" && event.key !== " ") {

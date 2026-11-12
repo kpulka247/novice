@@ -65,7 +65,9 @@ async function openYouTube(context, url) {
   const page = await context.newPage();
   await page.goto(url, { waitUntil: "domcontentloaded" });
   for (let attempt = 0; attempt < 12; attempt++) {
-    const reject = page.locator("button", { hasText: "Reject all" }).first();
+    const reject = page
+      .locator("button", { hasText: /^(Reject all|Alle ablehnen|Rechazar todo)$/ })
+      .first();
     if (await reject.isVisible().catch(() => false)) {
       await reject.click({ force: true }).catch(() => {});
       await page.waitForLoadState("domcontentloaded");
@@ -240,9 +242,13 @@ const shield = await shieldPage.screenshot();
 await english.context.close();
 
 const popups = [popupEnglish];
-for (const lang of ["ja", "ar"]) {
+for (const lang of ["de", "es"]) {
   const browser = await launch(lang);
-  popups.push(await popupShot(browser));
+  await openYouTube(browser.context, SEARCH);
+  const [tab] = await browser.worker.evaluate(() =>
+    chrome.tabs.query({ url: "https://www.youtube.com/*" }),
+  );
+  popups.push(await popupShot(browser, tab.id));
   await browser.context.close();
 }
 

@@ -138,6 +138,13 @@ test("facebook posts are expanded so text behind See more is checked", async () 
   });
   assert.equal(await stateOf(page, "logitech"), "blur");
   assert.equal(await stateOf(page, "cats"), "visible");
+  await page.waitForTimeout(1500);
+  assert.equal(
+    await page.evaluate(() => window.toggles),
+    2,
+    "each post is expanded once and never collapsed again",
+  );
+  assert.match(await page.textContent("#cats"), /opens every door/);
   await page.close();
 });
 

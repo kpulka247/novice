@@ -158,8 +158,9 @@ export function createBlocker(host) {
     const buttons = [...root.querySelectorAll(expanderSelector)];
     if (root.matches(expanderSelector)) buttons.push(root);
     for (const button of buttons) {
-      if (button.hasAttribute(EXPANDED)) continue;
-      button.setAttribute(EXPANDED, "");
+      const post = findUnit(button, host) ?? button.parentElement;
+      if (!post || post.hasAttribute(EXPANDED)) continue;
+      post.setAttribute(EXPANDED, "");
       pendingExpanders.add(button);
     }
     if (pendingExpanders.size === 0) return;

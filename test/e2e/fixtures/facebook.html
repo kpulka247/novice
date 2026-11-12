@@ -7,34 +7,47 @@
   <body>
     <div role="feed">
       <div role="article" id="logitech">
-        <div data-ad-rendering-role="story_message">
-          <span id="logitech-text"
-            >Logitech po prostu daje pracownikom dodatkowy, płatny urlop na
-            granie. Firma wprowadza „Logi Game Day”, a CEO Hanneke Faber głośno
-            walczy ze stereotypem, że gaming to s...</span
-          >
-          <div role="button" tabindex="0" id="logitech-more">
-            Wyświetl więcej
-          </div>
-        </div>
+        <div data-ad-rendering-role="story_message"></div>
         <img alt="Może być zdjęciem przedstawiającym 1 osoba" src="data:," />
       </div>
       <div role="article" id="cats">
-        <div data-ad-rendering-role="story_message">
-          <span>My cat learned a new trick</span>
-          <div role="button" tabindex="0" id="cats-more">See more</div>
-        </div>
+        <div data-ad-rendering-role="story_message"></div>
       </div>
     </div>
     <script>
-      document.getElementById("logitech-more").addEventListener("click", () => {
-        document.getElementById("logitech-text").textContent +=
-          "trata czasu. https://www.gry-online.pl/newsroom/granie-to-nie-strata-czasu-na-premiere-gta-6/z2322ef";
-        document.getElementById("logitech-more").remove();
-      });
-      document.getElementById("cats-more").addEventListener("click", () => {
-        document.getElementById("cats-more").textContent = "";
-      });
+      window.toggles = 0;
+
+      function post(id, short, full) {
+        const message = document.querySelector(
+          `#${id} [data-ad-rendering-role]`,
+        );
+        function render(expanded) {
+          message.replaceChildren();
+          const text = document.createElement("span");
+          text.textContent = expanded ? full : short;
+          const button = document.createElement("div");
+          button.setAttribute("role", "button");
+          button.tabIndex = 0;
+          button.textContent = expanded ? "Wyświetl mniej" : "Wyświetl więcej";
+          button.addEventListener("click", () => {
+            window.toggles++;
+            render(!expanded);
+          });
+          message.append(text, " ", button);
+        }
+        render(false);
+      }
+
+      post(
+        "logitech",
+        "Logitech po prostu daje pracownikom dodatkowy, płatny urlop na granie. Firma wprowadza „Logi Game Day”, a CEO Hanneke Faber głośno walczy ze stereotypem, że gaming to s...",
+        "Logitech po prostu daje pracownikom dodatkowy, płatny urlop na granie. Firma wprowadza „Logi Game Day”, a CEO Hanneke Faber głośno walczy ze stereotypem, że gaming to strata czasu. https://www.gry-online.pl/newsroom/granie-to-nie-strata-czasu-na-premiere-gta-6/z2322ef",
+      );
+      post(
+        "cats",
+        "My cat learned a new...",
+        "My cat learned a new trick and now opens every door in the house.",
+      );
     </script>
   </body>
 </html>

@@ -9,8 +9,8 @@ const BLURRED = `[${STATE}="blur"]`;
 const REVEALED = `[${STATE}="revealed"]`;
 const SETTLED = `${REVEALED},[${LEVEL}="gta6"]`;
 const ANCHOR = "data-gta6sb-anchor";
-const SIZE = "data-gta6sb-size";
 const LABEL = "data-gta6sb-label";
+const HINT = "data-gta6sb-hint";
 const ADDED = "data-gta6sb-added";
 const EXPANDED = "data-gta6sb-expanded";
 const ACCESSIBLE = { tabindex: "0", role: "button" };
@@ -37,11 +37,8 @@ const ATTR_SELECTOR = WATCHED_ATTRS.map((a) => `[${a}]`).join(",");
 const INLINE_CONTEXT = 300;
 const MAX_EXPANDER_TEXT = 40;
 
-const t = (key) => ext.i18n.getMessage(key);
-const LABELS = {
-  gta6: { m: t("blurLabelGta6"), s: t("blurShortGta6") },
-  franchise: { m: t("blurLabelFranchise"), s: t("blurShortFranchise") },
-};
+const TAGS = { gta6: "GTA VI", franchise: "GTA" };
+const SHOW = ext.i18n.getMessage("show");
 
 const stronger = (a, b) => (a === "gta6" || b === "gta6" ? "gta6" : (a ?? b));
 
@@ -62,15 +59,14 @@ export function createBlocker(host) {
   function label(unit, level) {
     unit.setAttribute(LEVEL, level);
     if (unit.getAttribute(STATE) === "blur") {
-      unit.setAttribute(LABEL, LABELS[level][unit.getAttribute(SIZE)]);
+      unit.setAttribute(LABEL, TAGS[level]);
+      unit.setAttribute(HINT, `${TAGS[level]} · ${SHOW}`);
     }
   }
 
   function cover(unit, level) {
     unit.setAttribute(STATE, style);
     if (style === "blur") {
-      const { width, height } = unit.getBoundingClientRect();
-      const small = height > 0 && (height < 48 || width < 220);
       if (getComputedStyle(unit).position === "static") {
         unit.setAttribute(ANCHOR, "");
       }
@@ -79,7 +75,6 @@ export function createBlocker(host) {
       );
       added.forEach((a) => unit.setAttribute(a, ACCESSIBLE[a]));
       unit.setAttribute(ADDED, added.join(" "));
-      unit.setAttribute(SIZE, small ? "s" : "m");
     }
     label(unit, level);
   }
@@ -105,7 +100,7 @@ export function createBlocker(host) {
 
   function clear(unit, nextState) {
     const added = unit.getAttribute(ADDED)?.split(" ").filter(Boolean) ?? [];
-    [...added, ANCHOR, SIZE, LABEL, ADDED, LEVEL].forEach((a) =>
+    [...added, ANCHOR, LABEL, HINT, ADDED, LEVEL].forEach((a) =>
       unit.removeAttribute(a),
     );
     if (nextState) unit.setAttribute(STATE, nextState);

@@ -12,6 +12,8 @@ const ANCHOR = "data-gta6sb-anchor";
 const HINT = "data-gta6sb-hint";
 const SIZE = "data-gta6sb-size";
 const ADDED = "data-gta6sb-added";
+const OFFSET_X = "--gta6sb-x";
+const OFFSET_Y = "--gta6sb-y";
 const EXPANDED = "data-gta6sb-expanded";
 const ACCESSIBLE = { tabindex: "0", role: "button" };
 
@@ -40,6 +42,47 @@ const MAX_EXPANDER_TEXT = 40;
 const TAGS = { gta6: "GTA VI", franchise: "GTA" };
 const SHOW = ext.i18n.getMessage("show");
 const SMALL = { height: 24, width: 72 };
+const CONTENT_SAMPLE = 60;
+const MEDIA_TAGS = new Set(["IMG", "VIDEO", "PICTURE", "CANVAS", "svg"]);
+
+function contentOffset(unit, box) {
+  const range = document.createRange();
+  const walker = document.createTreeWalker(
+    unit,
+    NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+  );
+  let left = Infinity;
+  let right = -Infinity;
+  let top = Infinity;
+  let seen = 0;
+  for (
+    let node = walker.nextNode();
+    node && seen < CONTENT_SAMPLE;
+    node = walker.nextNode()
+  ) {
+    let rect;
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (!node.data.trim()) continue;
+      range.selectNodeContents(node);
+      rect = range.getBoundingClientRect();
+    } else if (MEDIA_TAGS.has(node.tagName)) {
+      rect = node.getBoundingClientRect();
+    } else {
+      continue;
+    }
+    if (!rect.width || !rect.height) continue;
+    seen++;
+    left = Math.min(left, rect.left);
+    right = Math.max(right, rect.right);
+    top = Math.min(top, rect.top);
+  }
+  if (!seen) return { x: 0, y: 0 };
+  const rtl = getComputedStyle(unit).direction === "rtl";
+  return {
+    x: Math.max(0, Math.round(rtl ? box.right - right : left - box.left)),
+    y: Math.max(0, Math.round(top - box.top)),
+  };
+}
 
 const hintFor = (level) => `${TAGS[level]} · ${SHOW}`;
 
@@ -69,9 +112,13 @@ export function createBlocker(host) {
   const pendingExpanders = new Set();
   let chipWidthsInstalled = false;
   const sizes = new ResizeObserver((entries) => {
-    for (const { target, contentRect } of entries) {
-      const small =
-        contentRect.height < SMALL.height || contentRect.width < SMALL.width;
+    for (const { target } of entries) {
+      if (!target.isConnected) continue;
+      const box = target.getBoundingClientRect();
+      const small = box.height < SMALL.height || box.width < SMALL.width;
+      const { x, y } = contentOffset(target, box);
+      target.style.setProperty(OFFSET_X, `${x}px`);
+      target.style.setProperty(OFFSET_Y, `${y}px`);
       target.setAttribute(SIZE, small ? "s" : "m");
     }
   });
@@ -101,10 +148,12 @@ export function createBlocker(host) {
       if (getComputedStyle(unit).position === "static") {
         unit.setAttribute(ANCHOR, "");
       }
-      const added = Object.keys(ACCESSIBLE).filter(
+      const added = [...Object.keys(ACCESSIBLE), "style"].filter(
         (a) => !unit.hasAttribute(a),
       );
-      added.forEach((a) => unit.setAttribute(a, ACCESSIBLE[a]));
+      added
+        .filter((a) => a in ACCESSIBLE)
+        .forEach((a) => unit.setAttribute(a, ACCESSIBLE[a]));
       unit.setAttribute(ADDED, added.join(" "));
     }
     label(unit, level);
@@ -131,6 +180,8 @@ export function createBlocker(host) {
 
   function clear(unit, nextState) {
     sizes.unobserve(unit);
+    unit.style.removeProperty(OFFSET_X);
+    unit.style.removeProperty(OFFSET_Y);
     const added = unit.getAttribute(ADDED)?.split(" ").filter(Boolean) ?? [];
     [...added, ANCHOR, HINT, SIZE, ADDED, LEVEL].forEach((a) =>
       unit.removeAttribute(a),

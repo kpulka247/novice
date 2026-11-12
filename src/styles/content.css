@@ -29,8 +29,11 @@
 [data-gta6sb="blur"]::after {
   content: attr(data-gta6sb-hint) !important;
   position: absolute !important;
-  top: max(0px, min(8px, calc(50% - 10px))) !important;
-  inset-inline-start: 8px !important;
+  top: max(
+    0px,
+    min(max(8px, var(--gta6sb-y, 0px)), calc(50% - 10px))
+  ) !important;
+  inset-inline-start: max(8px, var(--gta6sb-x, 0px)) !important;
   right: auto;
   bottom: auto !important;
   z-index: 2147483646 !important;
@@ -98,8 +101,11 @@
 [data-gta6sb="blur"][data-gta6sb-size="s"]:hover::after,
 [data-gta6sb="blur"][data-gta6sb-size="s"]:focus-visible::after {
   content: "" !important;
-  top: max(0px, min(6px, calc(50% - 3px))) !important;
-  inset-inline-start: 6px !important;
+  top: max(
+    0px,
+    min(max(6px, var(--gta6sb-y, 0px)), calc(50% - 3px))
+  ) !important;
+  inset-inline-start: max(6px, var(--gta6sb-x, 0px)) !important;
   width: 6px !important;
   height: 6px !important;
   padding: 0 !important;

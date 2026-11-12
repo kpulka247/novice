@@ -179,6 +179,14 @@ test("tags and dots sit in the top-left corner, centered only on thin rows", asy
   assert.equal(thin.size, "m", "a 32px row fits a tag");
   assert.equal(thin.top, (thin.unitHeight - thin.height) / 2, "centered");
 
+  const wide = await place("wide");
+  assert.equal(
+    wide.left,
+    260,
+    "the tag follows the text, not the wrapper edge",
+  );
+  assert.ok(Math.abs(wide.top - 12) <= 1, `level with the text: ${wide.top}`);
+
   const line = await place("trailer");
   assert.equal(line.size, "s", "one line of text gets a dot");
   assert.ok(
@@ -241,6 +249,11 @@ test("clicking a blurred unit reveals it without following its link", async () =
   const page = await openFeed();
   await page.click("#link");
   assert.equal(await stateOf(page, "link"), "revealed");
+  assert.equal(
+    await page.$eval("#link", (el) => el.getAttribute("style")),
+    null,
+    "revealing leaves no trace of the tag position on the page's markup",
+  );
   assert.equal(new URL(page.url()).pathname, "/feed");
 
   await page.click("#fb-teaser");

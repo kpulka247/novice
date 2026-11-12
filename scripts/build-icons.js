@@ -54,6 +54,22 @@ for (const size of [16, 32, 48, 128]) {
     .toFile(`public/icons/icon${size}.png`);
 }
 
+const storeIconArt = await sharp(LOGO_FILE, { density: 600 })
+  .resize(96, 96)
+  .png()
+  .toBuffer();
+await sharp({
+  create: {
+    width: 128,
+    height: 128,
+    channels: 4,
+    background: { r: 0, g: 0, b: 0, alpha: 0 },
+  },
+})
+  .composite([{ input: storeIconArt, left: 16, top: 16 }])
+  .png()
+  .toFile("static/store/store-icon-128.png");
+
 await sharp(Buffer.from(banner)).png().toFile("static/images/banner.png");
 await sharp(Buffer.from(banner))
   .resize(440, 280)

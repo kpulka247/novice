@@ -8,7 +8,8 @@
     "icons": "node scripts/build-icons.js",
     "test": "node --test test/unit/*.test.js",
     "test:e2e": "webpack --mode development && node --test test/e2e/*.test.js",
-    "lint:firefox": "web-ext lint --source-dir dist/gta6spoilerblocker-firefox"
+    "lint:firefox": "web-ext lint --source-dir dist/gta6spoilerblocker-firefox",
+    "screenshots": "webpack --mode development && node scripts/capture-screenshots.js"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",

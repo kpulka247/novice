@@ -94,30 +94,51 @@ test("blurs GTA VI units and leaves everything else", async () => {
   ]) {
     assert.equal(await stateOf(page, id), "visible", `${id} should stay clear`);
   }
-  const label = await page.$eval(
-    "#trailer",
-    (el) => getComputedStyle(el, "::after").content,
+  assert.equal(
+    await page.$eval("#trailer", (el) => el.getAttribute("data-gta6sb-hint")),
+    "GTA VI · Show",
   );
-  assert.equal(label, '"GTA VI"');
   await page.close();
 });
 
-test("labels say whether a card names GTA VI or only GTA", async () => {
+test("tags say what was found and slide open on hover", async () => {
   const page = await openFeed();
   assert.equal(await levelOf(page, "trailer"), "gta6");
   assert.equal(await levelOf(page, "fb-helicopters"), "franchise");
-  const labels = await page.$$eval("#trailer, #fb-helicopters", (els) =>
-    els.map((el) => getComputedStyle(el, "::after").content),
-  );
-  assert.deepEqual(labels, ['"GTA VI"', '"GTA"']);
-  await page.hover("#trailer");
-  assert.equal(
-    await page.$eval(
-      "#trailer",
-      (el) => getComputedStyle(el, "::after").content,
-    ),
-    '"GTA VI · Show"',
-  );
+
+  const chip = (id) =>
+    page.$eval(`#${id}`, (el) => {
+      const after = getComputedStyle(el, "::after");
+      return {
+        size: el.getAttribute("data-gta6sb-size"),
+        content: after.content,
+        width: parseFloat(after.width),
+      };
+    });
+  const vars = await page.evaluate(() => {
+    const root = getComputedStyle(document.documentElement);
+    return {
+      tag: parseFloat(root.getPropertyValue("--gta6sb-chip-gta6")),
+      hint: parseFloat(root.getPropertyValue("--gta6sb-chip-gta6-hint")),
+    };
+  });
+
+  const small = await chip("trailer");
+  assert.equal(small.size, "s", "one line of text gets a dot");
+  assert.equal(small.content, '""');
+
+  const card = await chip("card");
+  assert.equal(card.size, "m");
+  assert.equal(card.content, '"GTA VI · Show"');
+  assert.ok(vars.tag > 0 && vars.hint > vars.tag);
+  assert.equal(card.width, vars.tag, "only GTA VI is visible at rest");
+
+  await page.hover("#card");
+  await page.waitForTimeout(80);
+  const midway = (await chip("card")).width;
+  assert.ok(midway > vars.tag && midway < vars.hint, `slides: ${midway}`);
+  await page.waitForTimeout(500);
+  assert.equal((await chip("card")).width, vars.hint, "Show is fully visible");
   await page.close();
 });
 

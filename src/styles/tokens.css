@@ -17,4 +17,5 @@
   --gta6sb-font:
     system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Helvetica, Arial,
     sans-serif;
+  --gta6sb-chip-font: 600 10px var(--gta6sb-font);
 }

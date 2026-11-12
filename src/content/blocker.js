@@ -9,8 +9,8 @@ const BLURRED = `[${STATE}="blur"]`;
 const REVEALED = `[${STATE}="revealed"]`;
 const SETTLED = `${REVEALED},[${LEVEL}="gta6"]`;
 const ANCHOR = "data-gta6sb-anchor";
-const LABEL = "data-gta6sb-label";
 const HINT = "data-gta6sb-hint";
+const SIZE = "data-gta6sb-size";
 const ADDED = "data-gta6sb-added";
 const EXPANDED = "data-gta6sb-expanded";
 const ACCESSIBLE = { tabindex: "0", role: "button" };
@@ -39,6 +39,26 @@ const MAX_EXPANDER_TEXT = 40;
 
 const TAGS = { gta6: "GTA VI", franchise: "GTA" };
 const SHOW = ext.i18n.getMessage("show");
+const SMALL = { height: 36, width: 140 };
+
+const hintFor = (level) => `${TAGS[level]} · ${SHOW}`;
+
+function installChipWidths() {
+  const font = getComputedStyle(document.documentElement)
+    .getPropertyValue("--gta6sb-chip-font")
+    .trim();
+  const context = document.createElement("canvas").getContext("2d");
+  context.font = font;
+  const width = (text) => `${Math.ceil(context.measureText(text).width)}px`;
+  const style = document.createElement("style");
+  style.textContent = `:root {${Object.keys(TAGS)
+    .map(
+      (level) =>
+        `--gta6sb-chip-${level}: ${width(TAGS[level])}; --gta6sb-chip-${level}-hint: ${width(hintFor(level))};`,
+    )
+    .join(" ")}}`;
+  document.documentElement.append(style);
+}
 
 const stronger = (a, b) => (a === "gta6" || b === "gta6" ? "gta6" : (a ?? b));
 
@@ -47,6 +67,14 @@ export function createBlocker(host) {
   let style = "blur";
   const expanderSelector = expanderSelectorFor(host);
   const pendingExpanders = new Set();
+  let chipWidthsInstalled = false;
+  const sizes = new ResizeObserver((entries) => {
+    for (const { target, contentRect } of entries) {
+      const small =
+        contentRect.height < SMALL.height || contentRect.width < SMALL.width;
+      target.setAttribute(SIZE, small ? "s" : "m");
+    }
+  });
 
   const accept = (level) => (level === "franchise" && !strict ? null : level);
   const levelOf = (text) => accept(spoilerLevel(text));
@@ -58,15 +86,18 @@ export function createBlocker(host) {
 
   function label(unit, level) {
     unit.setAttribute(LEVEL, level);
-    if (unit.getAttribute(STATE) === "blur") {
-      unit.setAttribute(LABEL, TAGS[level]);
-      unit.setAttribute(HINT, `${TAGS[level]} · ${SHOW}`);
-    }
+    if (unit.getAttribute(STATE) === "blur")
+      unit.setAttribute(HINT, hintFor(level));
   }
 
   function cover(unit, level) {
     unit.setAttribute(STATE, style);
     if (style === "blur") {
+      if (!chipWidthsInstalled) {
+        installChipWidths();
+        chipWidthsInstalled = true;
+      }
+      sizes.observe(unit);
       if (getComputedStyle(unit).position === "static") {
         unit.setAttribute(ANCHOR, "");
       }
@@ -99,8 +130,9 @@ export function createBlocker(host) {
   }
 
   function clear(unit, nextState) {
+    sizes.unobserve(unit);
     const added = unit.getAttribute(ADDED)?.split(" ").filter(Boolean) ?? [];
-    [...added, ANCHOR, LABEL, HINT, ADDED, LEVEL].forEach((a) =>
+    [...added, ANCHOR, HINT, SIZE, ADDED, LEVEL].forEach((a) =>
       unit.removeAttribute(a),
     );
     if (nextState) unit.setAttribute(STATE, nextState);

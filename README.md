@@ -5,7 +5,7 @@
 <a href="https://github.com/kpulka247/gta6-spoiler-blocker/actions" title="GitHub Actions Workflow Status"><img src="https://img.shields.io/github/actions/workflow/status/kpulka247/gta6-spoiler-blocker/release.yml"></a>
 <a title="Chrome Web Store Size"><img src="https://img.shields.io/chrome-web-store/size/CHROME_EXTENSION_ID"></a>
 <a href="https://github.com/kpulka247/gta6-spoiler-blocker/releases" title="GitHub Release"><img src="https://img.shields.io/github/v/release/kpulka247/gta6-spoiler-blocker?logo=github&logoColor=white"></a>
-<a href="https://github.com/kpulka247/gta6-spoiler-blocker/blob/main/LICENSE" title="GitHub License"><img src="https://img.shields.io/github/license/kpulka247/gta6-spoiler-blocker?color=%23ff3d9a"></a>
+<a href="https://github.com/kpulka247/gta6-spoiler-blocker/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/license-source--available-ff3d9a"></a>
 
 <a href="https://chromewebstore.google.com/detail/gta-6-spoiler-blocker/CHROME_EXTENSION_ID" title="Chrome Web Store Users"><img src="https://img.shields.io/chrome-web-store/users/CHROME_EXTENSION_ID?logo=Google%20Chrome&logoColor=white&color=%23ff3d9a"></a>
 <a href="https://chromewebstore.google.com/detail/gta-6-spoiler-blocker/CHROME_EXTENSION_ID" title="Chrome Web Store Rating"><img src="https://img.shields.io/chrome-web-store/rating/CHROME_EXTENSION_ID"></a>
@@ -87,7 +87,9 @@ Every merge to `main` is released automatically with [semantic-release](https://
 
 Read **[CONTRIBUTING.md](./CONTRIBUTING.md)** for the project layout, the target branch (`dev`), and the Pull Request naming rules.
 
-## Disclaimer
+## License
+
+Source-available, all rights reserved. You can read the code, fork it, and send pull requests. You cannot publish the extension or a modified copy of it in any store or elsewhere. See [LICENSE](./LICENSE).
 
 An unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive. Grand Theft Auto is a trademark of Take-Two Interactive Software, Inc.
 

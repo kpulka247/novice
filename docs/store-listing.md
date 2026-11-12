@@ -41,7 +41,7 @@ You stay in control:
 
 Privacy: everything runs on your device. The extension collects no data, sends nothing anywhere, and has no analytics.
 
-Open source: https://github.com/kpulka247/gta6-spoiler-blocker
+Source code: https://github.com/kpulka247/gta6-spoiler-blocker
 
 This is an unofficial fan project. It is not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive.
 

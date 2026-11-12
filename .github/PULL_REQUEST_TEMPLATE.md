@@ -29,6 +29,7 @@
 <!-- To check a box, replace [ ] with [x]. -->
 
 - [ ] I have read the [CONTRIBUTING.md](./CONTRIBUTING.md).
+- [ ] I agree that this contribution is covered by the [LICENSE](./LICENSE).
 - [ ] The **title of this Pull Request** follows Conventional Commits (e.g. `fix: hide reddit search cards`, `feat: block spoilers on threads`).
 - [ ] `pnpm test` and `pnpm test:e2e` pass.
 - [ ] I have run Prettier to format my code (`pnpm dev` or format on save).

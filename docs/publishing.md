@@ -37,7 +37,7 @@ The two publish jobs finish with a notice that says the store secrets are not se
 1. Open the [Firefox Add-on Developer Hub](https://addons.mozilla.org/developers/) and click **Submit a New Add-on**.
 2. Choose **On this site** and upload `gta6spoilerblocker-1.0.0-firefox.zip`.
 3. When the form asks whether you use a build tool or minifier, answer **Yes**. Upload **Source code (zip)** from the same GitHub Release. Reviewers build it with `pnpm install && pnpm build`, as the README says.
-4. Fill in the listing from [store-listing.md](store-listing.md). Set the add-on URL to `gta6-spoiler-blocker`, because the README badges point to `addons.mozilla.org/firefox/addon/gta6-spoiler-blocker/`. Choose the **GNU General Public License v3.0**, and upload the same five screenshots.
+4. Fill in the listing from [store-listing.md](store-listing.md). Set the add-on URL to `gta6-spoiler-blocker`, because the README badges point to `addons.mozilla.org/firefox/addon/gta6-spoiler-blocker/`. For the license, choose **All Rights Reserved**. If the form only offers a custom license, choose **Custom License** and paste the text of `LICENSE`. Then upload the same five screenshots.
 5. Submit the add-on.
 
 ## 4. Add the repository secrets

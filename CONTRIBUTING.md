@@ -2,6 +2,10 @@
 
 Thank you for helping people go into GTA VI blind. Bug reports, new terms, site support, and code improvements are all welcome.
 
+## Before you start
+
+This project is source-available, not open source. You can fork it and change your fork to prepare a pull request, but you cannot publish the extension or a modified copy anywhere. By opening a pull request, you agree that your contribution is covered by the terms in [LICENSE](./LICENSE).
+
 ## Report a spoiler that got through
 
 Open an issue with:

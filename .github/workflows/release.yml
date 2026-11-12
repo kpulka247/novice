@@ -52,6 +52,8 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     if: needs.release.outputs.new_release_version != ''
+    env:
+      CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
 
     steps:
       - name: Download build artifacts
@@ -71,14 +73,18 @@ jobs:
         with:
           node-version: 24
 
+      - name: Skip until the Chrome secrets are set
+        if: env.CHROME_EXTENSION_ID == ''
+        run: echo "::notice::CHROME_EXTENSION_ID is not set, so this release was not uploaded to the Chrome Web Store."
+
       - name: Publish to Chrome Web Store
+        if: env.CHROME_EXTENSION_ID != ''
         run: |
           pnpm dlx chrome-webstore-upload-cli upload \
             --source dist/gta6spoilerblocker-${{ needs.release.outputs.new_release_version }}-chrome.zip \
             --extension-id $CHROME_EXTENSION_ID \
             --auto-publish
         env:
-          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
@@ -88,8 +94,25 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     if: needs.release.outputs.new_release_version != ''
+    env:
+      WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+      WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
 
     steps:
+      - name: Skip until the Firefox secrets are set
+        if: env.WEB_EXT_API_KEY == ''
+        run: echo "::notice::AMO_JWT_ISSUER is not set, so this release was not uploaded to Firefox Add-ons."
+
+      - name: Checkout the released source
+        if: env.WEB_EXT_API_KEY != ''
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.release.outputs.new_release_version }}
+
+      - name: Pack the source code for the AMO review
+        if: env.WEB_EXT_API_KEY != ''
+        run: git archive --format=zip --output=/tmp/source-code.zip HEAD
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -108,12 +131,11 @@ jobs:
           node-version: 24
 
       - name: Publish to Firefox AMO
+        if: env.WEB_EXT_API_KEY != ''
         run: |
           pnpm dlx web-ext sign \
             --source-dir=dist/gta6spoilerblocker-firefox \
             --artifacts-dir=web-ext-artifacts \
+            --upload-source-code=/tmp/source-code.zip \
             --channel=listed \
             --no-input
-        env:
-          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
-          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}

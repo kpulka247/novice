@@ -116,10 +116,16 @@ function decodeUrl(url) {
   }
 }
 
-export function mentionsGta6(text, { strict = false } = {}) {
-  if (!text) return false;
+export function spoilerLevel(text) {
+  if (!text) return null;
   const cleaned = clean(text);
-  return EXPLICIT.test(cleaned) || (strict && FRANCHISE.test(cleaned));
+  if (EXPLICIT.test(cleaned)) return "gta6";
+  if (FRANCHISE.test(cleaned)) return "franchise";
+  return null;
+}
+
+export function mentionsGta6(text) {
+  return spoilerLevel(text) === "gta6";
 }
 
 export function urlMentionsGta6(url) {

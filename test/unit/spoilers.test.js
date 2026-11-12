@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mentionsGta6, urlMentionsGta6 } from "../../src/spoilers.js";
+import {
+  mentionsGta6,
+  spoilerLevel,
+  urlMentionsGta6,
+} from "../../src/spoilers.js";
 
 const SPOILERS = [
   "GTA 6 ending explained",
@@ -104,14 +108,17 @@ for (const text of SAFE) {
   test(`allows: ${text}`, () => assert.equal(mentionsGta6(text), false));
 }
 
+for (const text of SPOILERS) {
+  test(`level gta6: ${text}`, () => assert.equal(spoilerLevel(text), "gta6"));
+}
+
 for (const text of FRANCHISE_ONLY) {
-  test(`strict blocks: ${text}`, () =>
-    assert.equal(mentionsGta6(text, { strict: true }), true));
+  test(`level franchise: ${text}`, () =>
+    assert.equal(spoilerLevel(text), "franchise"));
 }
 
 for (const text of SAFE_EVEN_STRICT) {
-  test(`strict allows: ${text}`, () =>
-    assert.equal(mentionsGta6(text, { strict: true }), false));
+  test(`level none: ${text}`, () => assert.equal(spoilerLevel(text), null));
 }
 
 test("blocks GTA VI URLs", () => {

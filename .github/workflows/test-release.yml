@@ -57,7 +57,7 @@ jobs:
       - name: Simulate Publish Step
         run: |
           echo "✅ Successfully downloaded artifacts."
-          echo "ℹ️ Would publish file: dist/gta6spoilerblocker-${{ needs.test-release.outputs.new_release_version }}-chrome.zip"
+          echo "ℹ️ Would publish file: dist/novice-${{ needs.test-release.outputs.new_release_version }}-chrome.zip"
           echo "✅ Chrome publish simulation complete."
 
   test-publish-firefox:
@@ -76,5 +76,5 @@ jobs:
       - name: Simulate Publish Step
         run: |
           echo "✅ Successfully downloaded artifacts."
-          echo "ℹ️ Would sign and publish from source directory: dist/gta6spoilerblocker-firefox"
+          echo "ℹ️ Would sign and publish from source directory: dist/novice-firefox"
           echo "✅ Firefox publish simulation complete."

@@ -118,6 +118,37 @@ const FRANCHISE_TERMS = {
     ["rockstar", "intel"],
     ["gtabase"],
     ["gtaforums"],
+    ["rockstar", "mag"],
+    ["rockstar", "newswire"],
+  ],
+  creators: [
+    ["dark", "viper", "au"],
+    ["mr", "boss", "ftw"],
+    ["ghillie", "master"],
+    ["broughy(?:1322)?"],
+    ["tylarious"],
+    ["speedy", "w03"],
+    ["domis", "live"],
+    ["techno", "gamerz"],
+    ["alpha", "sniper", "97"],
+    ["lord", "kebun"],
+  ],
+  roleplay: [
+    ["nopixel"],
+    ["fivem"],
+    ["rage", "mp"],
+    ["sa[-:]mp"],
+    ["5city"],
+    ["spain", "rp"],
+    ["marbella", "vice"],
+    ["gvmp"],
+    ["flashland"],
+    ["eclipse", "rp"],
+    ["majestic", "rp"],
+    ["arizona", "rp"],
+    ["radmir", "rp"],
+    ["cidade", "alta", "rp"],
+    ["complexo", "rp"],
   ],
   leonida: [
     ["ambrosia"],
@@ -156,20 +187,21 @@ const WORD_CHAR = `(?:${LETTER}|\\p{N})`;
 const START = `(?<!${WORD_CHAR})`;
 const INVISIBLE = /[\u00AD\u200B-\u200D\u2060\uFEFF]/g;
 
-const compile = (terms, end) =>
+const terms = (words, end) => START + words.join(SEP) + end;
+
+const compile = (groups, end) =>
   new RegExp(
-    terms.map((words) => START + words.join(SEP) + end).join("|"),
+    Object.entries(groups)
+      .map(
+        ([name, list]) =>
+          `(?<${name}>${list.map((w) => terms(w, end)).join("|")})`,
+      )
+      .join("|"),
     "iu",
   );
 
-const EXPLICIT = compile(
-  Object.values(EXPLICIT_TERMS).flat(),
-  `(?!${WORD_CHAR})`,
-);
-const FRANCHISE = compile(
-  Object.values(FRANCHISE_TERMS).flat(),
-  `(?!${LETTER})`,
-);
+const EXPLICIT = compile(EXPLICIT_TERMS, `(?!${WORD_CHAR})`);
+const FRANCHISE = compile(FRANCHISE_TERMS, `(?!${LETTER})`);
 
 const ROCKSTAR_SOURCES = [
   /^https?:\/\/(?:www\.)?rockstargames\.com(?:[/?#]|$)/i,
@@ -179,6 +211,33 @@ const ROCKSTAR_SOURCES = [
   /^https?:\/\/(?:www\.)?tiktok\.com\/@rockstargames(?:[/?#]|$)/i,
   /^https?:\/\/(?:www\.)?twitch\.tv\/rockstargames(?:[/?#]|$)/i,
 ];
+
+// Channel links catch a creator's posts even where the card hides their name.
+const CREATOR_HANDLES = [
+  "darkviperau",
+  "mrbossftw",
+  "ghillie_?master",
+  "broughy1322",
+  "tylarious",
+  "speedyw03",
+  "domislive",
+  "technogamerz(?:official)?",
+  "alphasniper97",
+  "lordkebun",
+  "kiwitalkz",
+  "videotech_?uk",
+  "yan2295",
+  "tezfunz2",
+  "gtaseriesvideos",
+  "rockstarintel",
+];
+const CREATOR_PAGES = new RegExp(
+  `^https?://(?:[\\w-]+\\.)*(?:youtube\\.com|twitch\\.tv|kick\\.com|(?:x|twitter)\\.com|tiktok\\.com|instagram\\.com)/(?:@|c/|user/)?(${CREATOR_HANDLES.join("|")})(?:[/?#]|$)`,
+  "i",
+);
+
+const KEYWORD_SPLIT = /[\s\-_.+:'’#·•・]+/u;
+const escapeRegExp = (text) => text.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&");
 
 const clean = (text) => text.normalize("NFKC").replace(INVISIBLE, "");
 
@@ -190,20 +249,47 @@ function decodeUrl(url) {
   }
 }
 
-export function spoilerLevel(text) {
+function find(regex, text, level) {
+  const match = regex?.exec(text);
+  if (!match) return null;
+  // Naming the matched words would give away the story spoiler itself.
+  const term = match.groups?.spoilers ? null : match[0].trim();
+  return { level, term };
+}
+
+export function compileKeywords(keywords) {
+  const phrases = keywords
+    .map((keyword) =>
+      clean(keyword).split(KEYWORD_SPLIT).filter(Boolean).map(escapeRegExp),
+    )
+    .filter((words) => words.length > 0);
+  if (phrases.length === 0) return null;
+  return new RegExp(
+    phrases.map((words) => terms(words, `(?!${WORD_CHAR})`)).join("|"),
+    "iu",
+  );
+}
+
+export function findSpoiler(text, keywords = null) {
   if (!text) return null;
   const cleaned = clean(text);
-  if (EXPLICIT.test(cleaned)) return "gta6";
-  if (FRANCHISE.test(cleaned)) return "franchise";
-  return null;
+  return (
+    find(EXPLICIT, cleaned, "gta6") ??
+    find(keywords, cleaned, "gta6") ??
+    find(FRANCHISE, cleaned, "franchise")
+  );
 }
 
-export function mentionsGta6(text) {
-  return spoilerLevel(text) === "gta6";
-}
-
-export function urlMentionsGta6(url) {
-  if (!url) return false;
-  if (ROCKSTAR_SOURCES.some((source) => source.test(url))) return true;
-  return mentionsGta6(decodeUrl(url));
+export function findUrlSpoiler(url, keywords = null) {
+  if (!url) return null;
+  if (ROCKSTAR_SOURCES.some((source) => source.test(url))) {
+    return { level: "gta6", term: "Rockstar Games" };
+  }
+  const decoded = clean(decodeUrl(url));
+  const creator = CREATOR_PAGES.exec(url);
+  return (
+    find(EXPLICIT, decoded, "gta6") ??
+    find(keywords, decoded, "gta6") ??
+    (creator && { level: "franchise", term: creator[1] })
+  );
 }

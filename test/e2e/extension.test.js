@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const extensionDir = path.resolve(here, "../../dist/gta6spoilerblocker-chrome");
+const extensionDir = path.resolve(here, "../../dist/novice-chrome");
 
 let server;
 let base;
@@ -55,19 +55,19 @@ const setSettings = (patch) =>
 
 const levelOf = (page, id) =>
   page.$eval(`#${id}`, (el) =>
-    el.closest("[data-gta6sb]")?.getAttribute("data-gta6sb-level"),
+    el.closest("[data-novice]")?.getAttribute("data-novice-level"),
   );
 
 const stateOf = (page, id) =>
   page.$eval(`#${id}`, (el) => {
-    const unit = el.closest("[data-gta6sb]");
-    return unit?.getAttribute("data-gta6sb") ?? "visible";
+    const unit = el.closest("[data-novice]");
+    return unit?.getAttribute("data-novice") ?? "visible";
   });
 
 async function openFeed() {
   const page = await context.newPage();
   await page.goto(`${base}/feed`);
-  await page.waitForSelector("#late[data-gta6sb]", { state: "attached" });
+  await page.waitForSelector("#late[data-novice]", { state: "attached" });
   return page;
 }
 
@@ -95,7 +95,7 @@ test("blurs GTA VI units and leaves everything else", async () => {
     assert.equal(await stateOf(page, id), "visible", `${id} should stay clear`);
   }
   assert.equal(
-    await page.$eval("#trailer", (el) => el.getAttribute("data-gta6sb-tag")),
+    await page.$eval("#trailer", (el) => el.getAttribute("data-novice-tag")),
     "GTA VI",
   );
   await page.close();
@@ -111,7 +111,7 @@ test("tags say what was found and slide Show open on hover", async () => {
       const tag = getComputedStyle(el, "::before");
       const show = getComputedStyle(el, "::after");
       return {
-        size: el.getAttribute("data-gta6sb-size"),
+        size: el.getAttribute("data-novice-size"),
         tag: tag.content,
         tagWidth: parseFloat(tag.width),
         icon: tag.backgroundImage.includes("M3 3l18 18") ? "eye-off" : "eye",
@@ -122,8 +122,8 @@ test("tags say what was found and slide Show open on hover", async () => {
   const vars = await page.evaluate(() => {
     const root = getComputedStyle(document.documentElement);
     return {
-      tag: parseFloat(root.getPropertyValue("--gta6sb-chip-gta6")),
-      show: parseFloat(root.getPropertyValue("--gta6sb-chip-show")),
+      tag: parseFloat(root.getPropertyValue("--novice-chip-gta6")),
+      show: parseFloat(root.getPropertyValue("--novice-chip-show")),
     };
   });
 
@@ -148,6 +148,27 @@ test("tags say what was found and slide Show open on hover", async () => {
   const open = await chip("card");
   assert.equal(open.showWidth, vars.show, "Show is fully visible");
   assert.equal(open.icon, "eye", "the icon opens on hover");
+  assert.equal(open.tag, '"“Grand Theft Auto VI”"', "hover names the match");
+  assert.ok(open.tagWidth > card.tagWidth, "the tag grows to fit the match");
+  await page.close();
+});
+
+test("a custom keyword blurs like GTA VI and shows itself on hover", async () => {
+  const page = await openFeed();
+  assert.equal(await stateOf(page, "pasta"), "visible");
+  await setSettings({ keywords: ["carbonara"] });
+  await page.waitForSelector("#pasta[data-novice='blur']", {
+    state: "attached",
+  });
+  assert.equal(await levelOf(page, "pasta"), "gta6");
+  assert.equal(
+    await page.$eval("#pasta", (el) => el.getAttribute("data-novice-term")),
+    "“carbonara”",
+  );
+  await setSettings({ keywords: [] });
+  await page.waitForFunction(
+    () => !document.querySelector("#pasta[data-novice]"),
+  );
   await page.close();
 });
 
@@ -155,7 +176,7 @@ test("a card is blurred whole, with its image, and its neighbours stay clear", a
   const page = await openFeed();
   assert.equal(await stateOf(page, "gcard"), "blur");
   assert.equal(
-    await page.$eval("#gcard", (el) => el.getAttribute("data-gta6sb")),
+    await page.$eval("#gcard", (el) => el.getAttribute("data-novice")),
     "blur",
     "the card itself is the blurred unit, so its thumbnail is covered",
   );
@@ -169,10 +190,10 @@ test("tags and dots sit in the top-left corner, centered only on thin rows", asy
   const page = await openFeed();
   const place = (id) =>
     page.$eval(`#${id}`, (el) => {
-      const unit = el.closest("[data-gta6sb]");
+      const unit = el.closest("[data-novice]");
       const after = getComputedStyle(unit, "::before");
       return {
-        size: unit.getAttribute("data-gta6sb-size"),
+        size: unit.getAttribute("data-novice-size"),
         top: parseFloat(after.top),
         left: parseFloat(after.left),
         height: parseFloat(after.height) + parseFloat(after.paddingTop) * 2,
@@ -208,13 +229,13 @@ test("tags and dots sit in the top-left corner, centered only on thin rows", asy
 test("remove mode takes spoilers out of the page", async () => {
   const page = await openFeed();
   await setSettings({ style: "hide" });
-  await page.waitForSelector("#trailer[data-gta6sb='hide']", {
+  await page.waitForSelector("#trailer[data-novice='hide']", {
     state: "attached",
   });
   assert.equal(await page.isVisible("#trailer"), false);
   assert.equal(await page.isVisible("#pasta"), true);
   await setSettings({ style: "blur" });
-  await page.waitForSelector("#trailer[data-gta6sb='blur']", {
+  await page.waitForSelector("#trailer[data-novice='blur']", {
     state: "attached",
   });
   await page.close();
@@ -223,7 +244,7 @@ test("remove mode takes spoilers out of the page", async () => {
 test("facebook posts are expanded so text behind See more is checked", async () => {
   const page = await context.newPage();
   await page.goto("https://www.facebook.com/");
-  await page.waitForSelector("#logitech[data-gta6sb-level='gta6']", {
+  await page.waitForSelector("#logitech[data-novice-level='gta6']", {
     state: "attached",
   });
   assert.equal(await stateOf(page, "logitech"), "blur");
@@ -246,7 +267,7 @@ test("strict mode catches posts that only name the franchise", async () => {
 
   await setSettings({ strict: false });
   await page.waitForFunction(
-    () => !document.querySelector("#fb-helicopters[data-gta6sb]"),
+    () => !document.querySelector("#fb-helicopters[data-novice]"),
   );
   assert.equal(await stateOf(page, "gta5"), "visible");
   assert.equal(await stateOf(page, "trailer"), "blur");
@@ -277,8 +298,18 @@ test("clicking a blurred unit reveals it without following its link", async () =
 test("covers a page whose title is about GTA VI with a see-through blur", async () => {
   const page = await context.newPage();
   await page.goto(`${base}/news/1`);
-  await page.waitForSelector("gta6sb-shield", { state: "attached" });
+  await page.waitForSelector("novice-shield", { state: "attached" });
   assert.equal(await page.title(), "Spoiler ahead");
+  assert.equal(
+    await page.evaluate(
+      () =>
+        document
+          .querySelector("novice-shield")
+          .shadowRoot?.querySelector(".found")?.textContent,
+    ),
+    undefined,
+    "the cover keeps its shadow root closed",
+  );
   assert.equal(
     await page.$eval("body", (b) => getComputedStyle(b).opacity),
     "1",
@@ -289,7 +320,7 @@ test("covers a page whose title is about GTA VI with a see-through blur", async 
 test("covers a page whose URL is about GTA VI before it renders", async () => {
   const page = await context.newPage();
   await page.goto(`${base}/gta-6-leaks`, { waitUntil: "commit" });
-  await page.waitForSelector("gta6sb-shield", { state: "attached" });
+  await page.waitForSelector("novice-shield", { state: "attached" });
   await page.close();
 });
 
@@ -304,11 +335,11 @@ test("a blurred unit the site made click-through still takes the click", async (
 test("show anyway reveals the covered page", async () => {
   const page = await context.newPage();
   await page.goto(`${base}/news/2`);
-  await page.waitForSelector("gta6sb-shield", { state: "attached" });
+  await page.waitForSelector("novice-shield", { state: "attached" });
   await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
-  await page.waitForSelector("gta6sb-shield", { state: "detached" });
+  await page.waitForSelector("novice-shield", { state: "detached" });
   assert.equal(await page.title(), "GTA 6 ending explained");
   await page.close();
 });
@@ -317,23 +348,39 @@ test("popup switches turn blurring off globally and per site", async () => {
   const feed = await openFeed();
   const popup = await context.newPage();
   await popup.goto(`chrome-extension://${extensionId}/popup.html`);
-  assert.equal(await popup.textContent("h1"), "GTA 6 Spoiler Blocker");
+  assert.equal(await popup.textContent("h1"), "NoVice");
+  assert.equal(await popup.textContent("footer a"), "Report an issue");
+
+  await popup.fill("#keyword-input", "  Lucia   actress ");
+  await popup.press("#keyword-input", "Enter");
+  await popup.fill("#keyword-input", "lucia actress");
+  await popup.click("#keyword-add");
+  await popup.waitForSelector("#keyword-list li");
+  assert.deepEqual(
+    await worker.evaluate(() =>
+      chrome.storage.local.get("keywords").then((s) => s.keywords),
+    ),
+    ["Lucia actress"],
+    "keywords are trimmed and added once",
+  );
+  await popup.click("#keyword-list button");
+  await popup.waitForSelector("#keyword-list", { state: "hidden" });
 
   await popup.click("label.row:has(#enabled)");
   await feed.waitForFunction(
-    () => !document.querySelector("[data-gta6sb='blur']"),
+    () => !document.querySelector("[data-novice='blur']"),
   );
   await popup.click("label.row:has(#enabled)");
-  await feed.waitForSelector("#trailer[data-gta6sb='blur']", {
+  await feed.waitForSelector("#trailer[data-novice='blur']", {
     state: "attached",
   });
 
   await setSettings({ allowedSites: ["127.0.0.1"] });
   await feed.waitForFunction(
-    () => !document.querySelector("[data-gta6sb='blur']"),
+    () => !document.querySelector("[data-novice='blur']"),
   );
   await setSettings({ allowedSites: [] });
-  await feed.waitForSelector("#trailer[data-gta6sb='blur']", {
+  await feed.waitForSelector("#trailer[data-novice='blur']", {
     state: "attached",
   });
 

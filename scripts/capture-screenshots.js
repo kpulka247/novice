@@ -3,7 +3,7 @@ import sharp from "sharp";
 import { mkdirSync } from "node:fs";
 import path from "node:path";
 
-const EXTENSION = path.resolve("dist/gta6spoilerblocker-chrome");
+const EXTENSION = path.resolve("dist/novice-chrome");
 const README_DIR = "static/images";
 const STORE_DIR = "static/store";
 const SEARCH =
@@ -66,7 +66,9 @@ async function openYouTube(context, url) {
   await page.goto(url, { waitUntil: "domcontentloaded" });
   for (let attempt = 0; attempt < 12; attempt++) {
     const reject = page
-      .locator("button", { hasText: /^(Reject all|Alle ablehnen|Rechazar todo)$/ })
+      .locator("button", {
+        hasText: /^(Reject all|Alle ablehnen|Rechazar todo)$/,
+      })
       .first();
     if (await reject.isVisible().catch(() => false)) {
       await reject.click({ force: true }).catch(() => {});

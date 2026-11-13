@@ -1,4 +1,4 @@
-import { mentionsGta6, urlMentionsGta6 } from "../spoilers.js";
+import { compileKeywords, findSpoiler, findUrlSpoiler } from "../spoilers.js";
 import {
   DEFAULT_SETTINGS,
   blocksOn,
@@ -6,7 +6,7 @@ import {
   getSettings,
   onSettingsChange,
 } from "../settings.js";
-import { WATCHED_ATTRS, createBlocker } from "./blocker.js";
+import { WATCHED_ATTRS, createBlocker, termLabel } from "./blocker.js";
 import { BLOCKED_TITLE, createShield } from "./shield.js";
 
 const host = location.hostname;
@@ -14,6 +14,7 @@ const isTopFrame = window === window.top;
 const blocker = createBlocker(host);
 
 let settings = DEFAULT_SETTINGS;
+let keywords = null;
 let revealedHref = null;
 let siteTitle = "";
 let lastHref = location.href;
@@ -35,8 +36,13 @@ function isActive() {
   return blocksOn(settings, host) && revealedHref !== location.href;
 }
 
-function pageIsAboutGta6() {
-  return urlMentionsGta6(location.href) || mentionsGta6(siteTitle);
+const gta6Only = (match) => (match?.level === "gta6" ? match : null);
+
+function pageSpoiler() {
+  return (
+    gta6Only(findUrlSpoiler(location.href, keywords)) ??
+    gta6Only(findSpoiler(siteTitle, keywords))
+  );
 }
 
 function readSiteTitle() {
@@ -64,15 +70,18 @@ function report() {
 function sync() {
   readSiteTitle();
   const active = isActive();
-  const config = active ? `on:${settings.strict}:${settings.style}` : "off";
+  const config = active
+    ? `on:${settings.strict}:${settings.style}:${settings.keywords.join("\n")}`
+    : "off";
   if (config !== appliedConfig) {
     appliedConfig = config;
     blocker.clearAll();
     blocker.configure(settings);
     if (active) blocker.scan(document.documentElement);
   }
-  if (active && pageIsAboutGta6()) {
-    shield.show();
+  const spoiler = active ? pageSpoiler() : null;
+  if (spoiler) {
+    shield.show(termLabel(spoiler.term));
   } else {
     shield.hide();
     restoreTitle();
@@ -144,14 +153,13 @@ function start() {
   );
 
   sync();
-  getSettings().then((stored) => {
-    settings = stored;
-    sync();
-  });
-  onSettingsChange((next) => {
+  const apply = (next) => {
     settings = next;
+    keywords = compileKeywords(next.keywords);
     sync();
-  });
+  };
+  getSettings().then(apply);
+  onSettingsChange(apply);
 
   if (isTopFrame) {
     ext.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -161,7 +169,7 @@ function start() {
   }
 }
 
-if (!window.__gta6SpoilerBlocker) {
-  window.__gta6SpoilerBlocker = true;
+if (!window.__novice) {
+  window.__novice = true;
   start();
 }

@@ -34,10 +34,10 @@
       {
         "assets": [
           {
-            "path": "dist/gta6spoilerblocker-*-chrome.zip"
+            "path": "dist/novice-*-chrome.zip"
           },
           {
-            "path": "dist/gta6spoilerblocker-*-firefox.zip"
+            "path": "dist/novice-*-firefox.zip"
           }
         ]
       }

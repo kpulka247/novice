@@ -5,6 +5,7 @@ export const DEFAULT_SETTINGS = {
   strict: true,
   style: "blur",
   allowedSites: [],
+  keywords: [],
 };
 
 export async function getSettings() {

@@ -4,20 +4,20 @@ Every merge to `main` builds a release and uploads it to the Chrome Web Store an
 
 ## 1. Create the first release on GitHub
 
-1. Create the repository `kpulka247/gta6-spoiler-blocker` on GitHub if it does not exist yet. Keep it empty: no README, license, or `.gitignore`.
+1. Create the repository `kpulka247/novice` on GitHub if it does not exist yet. Keep it empty: no README, license, or `.gitignore`.
 2. Make sure the workflow can push the release commit and tag. In the GitHub repository, open **Settings > Actions > General** and set **Workflow permissions** to **Read and write permissions**.
 3. Push both branches:
    ```bash
    git push -u origin main dev
    ```
-4. Open the **Actions** tab and wait for the **Release** workflow. It creates the tag `v1.0.0`, a GitHub Release with `gta6spoilerblocker-1.0.0-chrome.zip` and `gta6spoilerblocker-1.0.0-firefox.zip`, and a `CHANGELOG.md` commit.
+4. Open the **Actions** tab and wait for the **Release** workflow. It creates the tag `v1.0.0`, a GitHub Release with `novice-1.0.0-chrome.zip` and `novice-1.0.0-firefox.zip`, and a `CHANGELOG.md` commit.
 
 The two publish jobs finish with a notice that says the store secrets are not set. That is expected.
 
 ## 2. Upload the first version to the Chrome Web Store
 
 1. Open the [Chrome Web Store developer dashboard](https://chrome.google.com/webstore/devconsole) with the account that publishes Dark Connect.
-2. Click **New item** and upload `gta6spoilerblocker-1.0.0-chrome.zip` from the GitHub Release.
+2. Click **New item** and upload `novice-1.0.0-chrome.zip` from the GitHub Release.
 3. On **Store listing**, paste the description from [store-listing.md](store-listing.md) and upload the graphics:
 
    | Field                           | File                                                                              |
@@ -35,12 +35,15 @@ The two publish jobs finish with a notice that says the store secrets are not se
 ## 3. Upload the first version to Firefox Add-ons
 
 1. Open the [Firefox Add-on Developer Hub](https://addons.mozilla.org/developers/) and click **Submit a New Add-on**.
-2. Choose **On this site** and upload `gta6spoilerblocker-1.0.0-firefox.zip`.
+2. Choose **On this site** and upload `novice-<version>-firefox.zip` from the latest GitHub Release. The add-on ID is `novice@kpulka.com`.
+
 3. When the form asks whether you use a build tool or minifier, answer **Yes**. Upload **Source code (zip)** from the same GitHub Release. Reviewers build it with `pnpm install && pnpm build`, as the README says.
-4. Fill in the listing from [store-listing.md](store-listing.md). Set the add-on URL to `gta6-spoiler-blocker`, because the README badges point to `addons.mozilla.org/firefox/addon/gta6-spoiler-blocker/`. For the license, choose **All Rights Reserved**. If the form only offers a custom license, choose **Custom License** and paste the text of `LICENSE`. Then upload the same five screenshots.
+4. Fill in the listing from [store-listing.md](store-listing.md). Set the add-on URL to `novice`, because the README badges point to `addons.mozilla.org/firefox/addon/novice/`. For the license, choose **All Rights Reserved**. If the form only offers a custom license, choose **Custom License** and paste the text of `LICENSE`. Then upload the same five screenshots.
 5. Submit the add-on.
 
 ## 4. Add the repository secrets
+
+If `AMO_JWT_ISSUER` is already set, the Firefox job tries to sign each release. Until the first version is on Firefox Add-ons, AMO has no add-on with this ID. A new listed add-on needs listing details, such as categories and a license, that the workflow does not send, so AMO rejects the upload and nothing is published. It starts working once step 3 is done.
 
 Open **Settings > Secrets and variables > Actions** and add these repository secrets:
 

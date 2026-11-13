@@ -1,4 +1,4 @@
-# Contributing to GTA 6 Spoiler Blocker
+# Contributing to NoVice
 
 Thank you for helping people go into GTA VI blind. Bug reports, new terms, site support, and code improvements are all welcome.
 
@@ -21,7 +21,7 @@ Do not paste the spoiler into the issue. Other people read issues too.
 1. Fork the repository on GitHub.
 2. Clone your fork. Replace `YOUR_GITHUB_USERNAME` with your username:
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/gta6-spoiler-blocker.git
+   git clone https://github.com/YOUR_GITHUB_USERNAME/novice.git
    ```
 3. Install dependencies. You need Node.js and `pnpm`:
    ```bash
@@ -32,8 +32,8 @@ Do not paste the spoiler into the issue. Other people read issues too.
    pnpm dev
    ```
 5. Load the extension in your browser:
-   - **Chrome.** Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and select `dist/gta6spoilerblocker-chrome/`.
-   - **Firefox.** Open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `manifest.json` in `dist/gta6spoilerblocker-firefox/`.
+   - **Chrome.** Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and select `dist/novice-chrome/`.
+   - **Firefox.** Open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `manifest.json` in `dist/novice-firefox/`.
 
 ## Project layout
 

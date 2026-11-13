@@ -82,7 +82,7 @@ jobs:
         if: env.CHROME_EXTENSION_ID != ''
         run: |
           pnpm dlx chrome-webstore-upload-cli upload \
-            --source dist/gta6spoilerblocker-${{ needs.release.outputs.new_release_version }}-chrome.zip \
+            --source dist/novice-${{ needs.release.outputs.new_release_version }}-chrome.zip \
             --extension-id $CHROME_EXTENSION_ID \
             --auto-publish
         env:
@@ -135,7 +135,7 @@ jobs:
         if: env.WEB_EXT_API_KEY != ''
         run: |
           pnpm dlx web-ext sign \
-            --source-dir=dist/gta6spoilerblocker-firefox \
+            --source-dir=dist/novice-firefox \
             --artifacts-dir=web-ext-artifacts \
             --upload-source-code=/tmp/source-code.zip \
             --channel=listed \

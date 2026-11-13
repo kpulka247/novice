@@ -1,21 +1,23 @@
-import { spoilerLevel, urlMentionsGta6 } from "../spoilers.js";
+import { compileKeywords, findSpoiler, findUrlSpoiler } from "../spoilers.js";
 import { expanderSelectorFor, findEmptiedShelf, findUnit } from "../sites.js";
 import { ext } from "../settings.js";
 
-const STATE = "data-gta6sb";
-const LEVEL = "data-gta6sb-level";
+const STATE = "data-novice";
+const LEVEL = "data-novice-level";
 const COVERED = `[${STATE}="blur"],[${STATE}="hide"]`;
 const BLURRED = `[${STATE}="blur"]`;
 const REVEALED = `[${STATE}="revealed"]`;
 const SETTLED = `${REVEALED},[${LEVEL}="gta6"]`;
-const ANCHOR = "data-gta6sb-anchor";
-const TAG = "data-gta6sb-tag";
-const SHOW_LABEL = "data-gta6sb-show";
-const SIZE = "data-gta6sb-size";
-const ADDED = "data-gta6sb-added";
-const OFFSET_X = "--gta6sb-x";
-const OFFSET_Y = "--gta6sb-y";
-const EXPANDED = "data-gta6sb-expanded";
+const ANCHOR = "data-novice-anchor";
+const TAG = "data-novice-tag";
+const SHOW_LABEL = "data-novice-show";
+const TERM = "data-novice-term";
+const TERM_WIDTH = "--novice-term-width";
+const SIZE = "data-novice-size";
+const ADDED = "data-novice-added";
+const OFFSET_X = "--novice-x";
+const OFFSET_Y = "--novice-y";
+const EXPANDED = "data-novice-expanded";
 const ACCESSIBLE = { tabindex: "0", role: "button" };
 
 const SKIPPED = new Set([
@@ -29,7 +31,7 @@ const SKIPPED = new Set([
   "TEXTAREA",
   "INPUT",
   "SELECT",
-  "GTA6SB-SHIELD",
+  "NOVICE-SHIELD",
 ]);
 
 const TEXT_ATTRS = ["alt", "title", "aria-label"];
@@ -42,6 +44,8 @@ const MAX_EXPANDER_TEXT = 40;
 
 const TAGS = { gta6: "GTA VI", franchise: "GTA" };
 const SHOW = ext.i18n.getMessage("show");
+const STORY = ext.i18n.getMessage("reasonStory");
+const MAX_TERM = 32;
 const SMALL = { height: 24, width: 72 };
 const CONTENT_SAMPLE = 60;
 const MEDIA_TAGS = new Set(["IMG", "VIDEO", "PICTURE", "CANVAS", "svg"]);
@@ -85,26 +89,42 @@ function contentOffset(unit, box) {
   };
 }
 
+let measurer = null;
+
+function chipWidth(text) {
+  if (!measurer) {
+    measurer = document.createElement("canvas").getContext("2d");
+    measurer.font = getComputedStyle(document.documentElement)
+      .getPropertyValue("--novice-chip-font")
+      .trim();
+  }
+  return `${Math.ceil(measurer.measureText(text).width)}px`;
+}
+
 function installChipWidths() {
-  const font = getComputedStyle(document.documentElement)
-    .getPropertyValue("--gta6sb-chip-font")
-    .trim();
-  const context = document.createElement("canvas").getContext("2d");
-  context.font = font;
-  const width = (text) => `${Math.ceil(context.measureText(text).width)}px`;
   const style = document.createElement("style");
   const tags = Object.entries(TAGS)
-    .map(([level, tag]) => `--gta6sb-chip-${level}: ${width(tag)};`)
+    .map(([level, tag]) => `--novice-chip-${level}: ${chipWidth(tag)};`)
     .join(" ");
-  style.textContent = `:root { ${tags} --gta6sb-chip-show: ${width(SHOW)}; }`;
+  style.textContent = `:root { ${tags} --novice-chip-show: ${chipWidth(SHOW)}; }`;
   document.documentElement.append(style);
 }
 
-const stronger = (a, b) => (a === "gta6" || b === "gta6" ? "gta6" : (a ?? b));
+export function termLabel(term) {
+  if (term === null) return STORY;
+  const words = term.replace(/\s+/g, " ");
+  const short =
+    words.length > MAX_TERM ? `${words.slice(0, MAX_TERM - 1)}…` : words;
+  return `“${short}”`;
+}
+
+const isGta6 = (match) => match?.level === "gta6";
+const stronger = (a, b) => (isGta6(a) ? a : isGta6(b) ? b : (a ?? b));
 
 export function createBlocker(host) {
   let strict = true;
   let style = "blur";
+  let keywords = null;
   const expanderSelector = expanderSelectorFor(host);
   const pendingExpanders = new Set();
   let chipWidthsInstalled = false;
@@ -120,23 +140,27 @@ export function createBlocker(host) {
     }
   });
 
-  const accept = (level) => (level === "franchise" && !strict ? null : level);
-  const levelOf = (text) => accept(spoilerLevel(text));
+  const accept = (match) =>
+    match?.level === "franchise" && !strict ? null : match;
+  const matchOf = (text) => accept(findSpoiler(text, keywords));
 
   const isSkipped = (element) =>
     SKIPPED.has(element.tagName) ||
     element.isContentEditable ||
     element.matches(SETTLED);
 
-  function label(unit, level) {
+  function label(unit, { level, term }) {
     unit.setAttribute(LEVEL, level);
     if (unit.getAttribute(STATE) === "blur") {
+      const reason = termLabel(term);
       unit.setAttribute(TAG, TAGS[level]);
       unit.setAttribute(SHOW_LABEL, SHOW);
+      unit.setAttribute(TERM, reason);
+      unit.style.setProperty(TERM_WIDTH, chipWidth(reason));
     }
   }
 
-  function cover(unit, level) {
+  function cover(unit, match) {
     unit.setAttribute(STATE, style);
     if (style === "blur") {
       if (!chipWidthsInstalled) {
@@ -155,25 +179,25 @@ export function createBlocker(host) {
         .forEach((a) => unit.setAttribute(a, ACCESSIBLE[a]));
       unit.setAttribute(ADDED, added.join(" "));
     }
-    label(unit, level);
+    label(unit, match);
   }
 
-  function mark(element, level) {
+  function mark(element, match) {
     if (element.closest(REVEALED)) return;
     const covered = element.closest(COVERED);
     if (covered) {
-      if (level === "gta6" && covered.getAttribute(LEVEL) !== "gta6") {
-        label(covered, "gta6");
+      if (isGta6(match) && covered.getAttribute(LEVEL) !== "gta6") {
+        label(covered, match);
       }
       return;
     }
     const unit = findUnit(element, host);
     if (!unit || unit.closest(`[${STATE}]`)) return;
-    cover(unit, level);
+    cover(unit, match);
     if (style === "hide") {
       const isGone = (el) => el.closest(COVERED) || el.querySelector(COVERED);
       const shelf = findEmptiedShelf(unit, host, isGone);
-      if (shelf) cover(shelf, level);
+      if (shelf) cover(shelf, match);
     }
   }
 
@@ -181,53 +205,54 @@ export function createBlocker(host) {
     sizes.unobserve(unit);
     unit.style.removeProperty(OFFSET_X);
     unit.style.removeProperty(OFFSET_Y);
+    unit.style.removeProperty(TERM_WIDTH);
     const added = unit.getAttribute(ADDED)?.split(" ").filter(Boolean) ?? [];
-    [...added, ANCHOR, TAG, SHOW_LABEL, SIZE, ADDED, LEVEL].forEach((a) =>
+    [...added, ANCHOR, TAG, SHOW_LABEL, TERM, SIZE, ADDED, LEVEL].forEach((a) =>
       unit.removeAttribute(a),
     );
     if (nextState) unit.setAttribute(STATE, nextState);
     else unit.removeAttribute(STATE);
   }
 
-  function textLevel(textNode) {
+  function textMatch(textNode) {
     if (!textNode.data.trim()) return null;
-    const own = levelOf(textNode.data);
-    if (own === "gta6") return own;
+    const own = matchOf(textNode.data);
+    if (isGta6(own)) return own;
     const context = textNode.parentElement?.textContent ?? "";
     return context.length <= INLINE_CONTEXT
-      ? stronger(own, levelOf(context))
+      ? stronger(own, matchOf(context))
       : own;
   }
 
-  function attrsLevel(element) {
-    const urlSpoils = URL_ATTRS.some((a) => {
-      if (!element.hasAttribute(a)) return false;
-      // The property resolves relative links ("/@RockstarGames") to absolute URLs.
-      const resolved = element[a];
-      return urlMentionsGta6(
-        typeof resolved === "string" && resolved
-          ? resolved
-          : element.getAttribute(a),
-      );
-    });
-    if (urlSpoils) return "gta6";
-    return TEXT_ATTRS.map((a) => levelOf(element.getAttribute(a))).reduce(
-      stronger,
-      null,
-    );
+  function urlMatch(element, attr) {
+    if (!element.hasAttribute(attr)) return null;
+    // The property resolves relative links ("/@RockstarGames") to absolute URLs.
+    const resolved = element[attr];
+    const url =
+      typeof resolved === "string" && resolved
+        ? resolved
+        : element.getAttribute(attr);
+    return accept(findUrlSpoiler(url, keywords));
+  }
+
+  function attrsMatch(element) {
+    return [
+      ...URL_ATTRS.map((a) => urlMatch(element, a)),
+      ...TEXT_ATTRS.map((a) => matchOf(element.getAttribute(a))),
+    ].reduce(stronger, null);
   }
 
   function checkElement(element) {
     if (!element.isConnected || element.closest(SETTLED)) return;
-    const level = attrsLevel(element);
-    if (level) mark(element, level);
+    const match = attrsMatch(element);
+    if (match) mark(element, match);
   }
 
   function checkText(textNode) {
     const parent = textNode.parentElement;
     if (!parent || isSkipped(parent) || parent.closest(SETTLED)) return;
-    const level = textLevel(textNode);
-    if (level) mark(parent, level);
+    const match = textMatch(textNode);
+    if (match) mark(parent, match);
   }
 
   function expandTruncatedText(root) {
@@ -288,6 +313,7 @@ export function createBlocker(host) {
     configure(settings) {
       strict = settings.strict;
       style = settings.style;
+      keywords = compileKeywords(settings.keywords);
     },
     blurredUnitAt(target) {
       return target instanceof Element ? target.closest(BLURRED) : null;

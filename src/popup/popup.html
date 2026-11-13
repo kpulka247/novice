@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GTA 6 Spoiler Blocker</title>
+    <title>NoVice</title>
     <link rel="stylesheet" href="styles/popup.css" />
   </head>
 
@@ -11,7 +11,7 @@
     <header>
       <div class="logo" id="logo"></div>
       <div>
-        <h1 data-i18n="extName"></h1>
+        <h1>NoVice</h1>
         <p class="tagline" data-i18n="tagline"></p>
       </div>
     </header>
@@ -59,16 +59,38 @@
           <input type="checkbox" class="switch" id="site" />
         </label>
       </section>
+
+      <section class="keywords">
+        <div class="row-text">
+          <span class="row-title" data-i18n="keywords"></span>
+          <span class="row-hint" data-i18n="keywordsHint"></span>
+        </div>
+        <form class="keyword-form" id="keyword-form">
+          <input
+            type="text"
+            id="keyword-input"
+            maxlength="60"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button
+            type="submit"
+            id="keyword-add"
+            data-i18n="keywordAdd"
+          ></button>
+        </form>
+        <ul class="chips" id="keyword-list"></ul>
+      </section>
     </main>
 
     <footer>
       <a
-        href="https://github.com/kpulka247/gta6-spoiler-blocker/issues"
+        href="https://github.com/kpulka247/novice/issues"
         target="_blank"
-        data-i18n="reportLeak"
+        data-i18n="reportIssue"
       ></a>
       <a
-        href="https://github.com/kpulka247/gta6-spoiler-blocker"
+        href="https://github.com/kpulka247/novice"
         target="_blank"
         data-i18n="sourceCode"
       ></a>

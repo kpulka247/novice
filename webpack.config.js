@@ -11,7 +11,7 @@ import { MESSAGES } from "./src/locales.js";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const { version } = JSON.parse(readFileSync(path.join(root, "package.json")));
-const NAME = "gta6spoilerblocker";
+const NAME = "novice";
 
 const BROWSER_MANIFEST = {
   chrome: {
@@ -21,7 +21,7 @@ const BROWSER_MANIFEST = {
     background: { scripts: ["background.js"] },
     browser_specific_settings: {
       gecko: {
-        id: "gta6-spoiler-blocker@kpulka.com",
+        id: "novice@kpulka.com",
         strict_min_version: "140.0",
         data_collection_permissions: { required: ["none"] },
       },

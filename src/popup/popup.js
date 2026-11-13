@@ -18,6 +18,37 @@ function translate() {
     el.textContent = t(el.dataset.i18n);
   });
   $("logo").innerHTML = logo;
+  $("keyword-input").placeholder = t("keywordPlaceholder");
+}
+
+const sameKeyword = (a, b) =>
+  a.localeCompare(b, undefined, { sensitivity: "accent" }) === 0;
+
+function renderKeywords(settings) {
+  const list = $("keyword-list");
+  list.replaceChildren(
+    ...settings.keywords.map((keyword) => {
+      const item = document.createElement("li");
+      const text = document.createElement("span");
+      const remove = document.createElement("button");
+      text.textContent = keyword;
+      remove.type = "button";
+      remove.textContent = "×";
+      remove.title = t("keywordRemove");
+      remove.setAttribute("aria-label", `${t("keywordRemove")}: ${keyword}`);
+      remove.disabled = !settings.enabled;
+      remove.addEventListener("click", () =>
+        updateSettings({
+          keywords: settings.keywords.filter((k) => k !== keyword),
+        }),
+      );
+      item.append(text, remove);
+      return item;
+    }),
+  );
+  list.hidden = settings.keywords.length === 0;
+  $("keyword-input").disabled = !settings.enabled;
+  $("keyword-add").disabled = !settings.enabled;
 }
 
 async function pageStatus() {
@@ -41,6 +72,7 @@ function render(settings, status) {
     radio.checked = radio.value === settings.style;
     radio.disabled = !settings.enabled;
   });
+  renderKeywords(settings);
 
   $("site-row").hidden = !status;
   if (!status) {
@@ -76,6 +108,15 @@ async function init() {
   );
   $("site").addEventListener("change", (e) => {
     if (status) setSiteAllowed(status.host, !e.target.checked);
+  });
+  $("keyword-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const keyword = $("keyword-input").value.trim().replace(/\s+/g, " ");
+    $("keyword-input").value = "";
+    if (!keyword || settings.keywords.some((k) => sameKeyword(k, keyword))) {
+      return;
+    }
+    updateSettings({ keywords: [...settings.keywords, keyword] });
   });
 
   onSettingsChange(async (next) => {

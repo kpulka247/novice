@@ -38,8 +38,9 @@ const banner = `
   </g>
   <rect x="0" y="639" width="1320" height="2" fill="url(#line)"/>
   ${nestedLogo(110, 150, 140)}
-  <text x="106" y="420" font-family="${FONT}" font-weight="800" font-size="92" letter-spacing="-2" fill="#f5f3f8">GTA 6</text>
-  <text x="106" y="520" font-family="${FONT}" font-weight="800" font-size="92" letter-spacing="-2" fill="#f5f3f8">Spoiler Blocker</text>
+  <text x="100" y="440" font-family="${FONT}" font-weight="800" font-size="150" letter-spacing="-4" fill="#f5f3f8">NoVice</text>
+  <text x="108" y="530" font-family="${FONT}" font-weight="700" font-size="60" letter-spacing="-1" fill="#f5f3f8">Block GTA 6 Spoilers</text>
+
   <text x="110" y="745" font-family="${FONT}" font-weight="600" font-size="40" fill="#a39cb3">Go in blind.</text>
 </svg>`;
 
@@ -65,7 +66,9 @@ await sharp(Buffer.from(banner))
   .png()
   .toFile("static/store/promo-tile-440x280.png");
 await sharp(Buffer.from(banner))
-  .resize(1400, 560, { fit: "cover" })
+  .resize(1400)
+  .extract({ left: 0, top: 100, width: 1400, height: 560 })
+
   .png()
   .toFile("static/store/marquee-1400x560.png");
 

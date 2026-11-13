@@ -1,5 +1,5 @@
 {
-  "name": "gta6-spoiler-blocker",
+  "name": "novice",
   "version": "1.0.0",
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
@@ -10,7 +10,7 @@
     "icons": "node scripts/build-icons.js",
     "test": "node --test test/unit/*.test.js",
     "test:e2e": "webpack --mode development && node --test test/e2e/*.test.js",
-    "lint:firefox": "web-ext lint --source-dir dist/gta6spoilerblocker-firefox",
+    "lint:firefox": "web-ext lint --source-dir dist/novice-firefox",
     "screenshots": "webpack --mode development && node scripts/capture-screenshots.js"
   },
   "devDependencies": {

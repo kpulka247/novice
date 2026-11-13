@@ -1,10 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  mentionsGta6,
-  spoilerLevel,
-  urlMentionsGta6,
+  compileKeywords,
+  findSpoiler,
+  findUrlSpoiler,
 } from "../../src/spoilers.js";
+
+const spoilerLevel = (text) => findSpoiler(text)?.level ?? null;
+const mentionsGta6 = (text) => spoilerLevel(text) === "gta6";
+const urlMentionsGta6 = (url) => findUrlSpoiler(url)?.level === "gta6";
 
 const SPOILERS = [
   "GTA 6 ending explained",
@@ -134,6 +138,24 @@ const FRANCHISE_ONLY = [
   "Cluckin' Bell",
   "Pißwasser",
   "Ammu-Nation",
+  "DarkViperAU any% run",
+  "MrBossFTW",
+  "GhillieMaster news",
+  "Broughy1322 vehicle review",
+  "Tylarious",
+  "Techno Gamerz new episode",
+  "AlphaSniper97",
+  "Lord Kebun",
+  "NoPixel 4.0",
+  "best FiveM servers",
+  "5City",
+  "Spain RP",
+  "Marbella Vice",
+  "GVMP",
+  "Majestic RP",
+  "Arizona RP",
+  "Cidade Alta RP",
+  "Rockstar Mag'",
 ];
 
 const SAFE_EVEN_STRICT = [
@@ -147,6 +169,14 @@ const SAFE_EVEN_STRICT = [
   "Carl Johnson, accountant",
   "rockstar intelligence",
   "R2D2",
+  "Dark viper snake",
+  "Lord of the Rings",
+  "Spain travel guide",
+  "Arizona weather",
+  "Marbella beaches",
+  "sample rate",
+  "Five more minutes",
+  "Rockstar magazine cover",
 ];
 
 for (const text of SPOILERS) {
@@ -213,4 +243,73 @@ test("allows other URLs", () => {
   ]) {
     assert.equal(urlMentionsGta6(url), false, url);
   }
+});
+
+test("names the words that matched", () => {
+  assert.deepEqual(findSpoiler("New GTA 6 trailer today"), {
+    level: "gta6",
+    term: "GTA 6",
+  });
+  assert.deepEqual(findSpoiler("DarkViperAU reacts"), {
+    level: "franchise",
+    term: "DarkViperAU",
+  });
+});
+
+test("never names the words of a story spoiler", () => {
+  assert.deepEqual(findSpoiler("I can't believe Jason dies"), {
+    level: "gta6",
+    term: null,
+  });
+});
+
+test("names Rockstar for its own pages", () => {
+  assert.deepEqual(findUrlSpoiler("https://www.rockstargames.com/VI"), {
+    level: "gta6",
+    term: "Rockstar Games",
+  });
+});
+
+test("creator channels count for strict mode only", () => {
+  for (const url of [
+    "https://www.youtube.com/@DarkViperAU/videos",
+    "https://www.twitch.tv/mrbossftw",
+    "https://x.com/GhillieMaster",
+    "https://www.youtube.com/@TechnoGamerzOfficial",
+    "https://kick.com/lordkebun",
+  ]) {
+    assert.equal(findUrlSpoiler(url)?.level, "franchise", url);
+  }
+  for (const url of [
+    "https://www.youtube.com/@DarkViperAUFan",
+    "https://example.com/darkviperau",
+    "https://www.youtube.com/watch?v=darkviperau",
+  ]) {
+    assert.equal(findUrlSpoiler(url), null, url);
+  }
+});
+
+test("custom keywords block like GTA VI, across spacing and case", () => {
+  const keywords = compileKeywords(["Lucia actress", "  ", "c++ (game)"]);
+  for (const text of [
+    "Who is the lucia actress?",
+    "LUCIA-ACTRESS revealed",
+    "luciaactress",
+    "Talk about c++ (game) today",
+  ]) {
+    assert.deepEqual(findSpoiler(text, keywords)?.level, "gta6", text);
+  }
+  assert.equal(findSpoiler("Lucia is an actress", keywords), null);
+  assert.equal(findSpoiler("the lucia actresses", keywords), null);
+  assert.equal(
+    findUrlSpoiler("https://example.com/news/lucia-actress-interview", keywords)
+      ?.level,
+    "gta6",
+  );
+});
+
+test("no keywords means nothing extra is blocked", () => {
+  assert.equal(compileKeywords([]), null);
+  assert.equal(compileKeywords(["   ", "---"]), null);
+  assert.equal(findSpoiler("hello world", compileKeywords([])), null);
 });

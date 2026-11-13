@@ -14,8 +14,8 @@
   padding: 24px;
   box-sizing: border-box;
   overflow: auto;
-  font-family: var(--gta6sb-font);
-  color: var(--gta6sb-text);
+  font-family: var(--novice-font);
+  color: var(--novice-text);
   background: rgba(13, 11, 20, 0.45);
   -webkit-backdrop-filter: blur(32px) saturate(1.3);
   backdrop-filter: blur(32px) saturate(1.3);
@@ -27,8 +27,8 @@
   padding: 32px 28px 22px;
   text-align: center;
   border-radius: 20px;
-  background: var(--gta6sb-ink-glass);
-  border: 1px solid var(--gta6sb-line);
+  background: var(--novice-ink-glass);
+  border: 1px solid var(--novice-line);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
 }
 
@@ -55,7 +55,23 @@ p {
   margin: 0 0 24px;
   font-size: 14px;
   line-height: 1.5;
-  color: var(--gta6sb-muted);
+  color: var(--novice-muted);
+}
+
+#text {
+  margin-bottom: 14px;
+}
+
+.found {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 22px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--novice-orange);
+  background: rgba(255, 162, 76, 0.1);
+  overflow-wrap: anywhere;
 }
 
 button {
@@ -74,14 +90,14 @@ button {
 }
 
 button:focus-visible {
-  outline: 2px solid var(--gta6sb-teal);
+  outline: 2px solid var(--novice-teal);
   outline-offset: 2px;
 }
 
 .leave {
   padding: 12px 16px;
   color: #fff;
-  background: var(--gta6sb-pink);
+  background: var(--novice-pink);
 }
 
 .leave:hover {
@@ -91,10 +107,10 @@ button:focus-visible {
 .reveal {
   margin-top: 6px;
   padding: 10px 16px;
-  color: var(--gta6sb-muted);
+  color: var(--novice-muted);
   background: transparent;
 }
 
 .reveal:hover {
-  color: var(--gta6sb-text);
+  color: var(--novice-text);
 }

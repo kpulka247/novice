@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="gta6sb-sunset" gradientUnits="userSpaceOnUse" x1="0" y1="4" x2="0" y2="124">
+    <linearGradient id="novice-sunset" gradientUnits="userSpaceOnUse" x1="0" y1="4" x2="0" y2="124">
       <stop offset="0" stop-color="#ff3d9a"/>
       <stop offset="1" stop-color="#ffa24c"/>
     </linearGradient>
   </defs>
-  <polygon points="39,8 89,8 120,39 120,89 89,120 39,120 8,89 8,39" fill="url(#gta6sb-sunset)" stroke="url(#gta6sb-sunset)" stroke-width="8" stroke-linejoin="round"/>
+  <polygon points="39,8 89,8 120,39 120,89 89,120 39,120 8,89 8,39" fill="url(#novice-sunset)" stroke="url(#novice-sunset)" stroke-width="8" stroke-linejoin="round"/>
   <polygon points="25,36 42,36 52.5,72 63,36 80,36 62,92 43,92" fill="#fff"/>
   <rect x="86" y="36" width="17" height="56" fill="#fff"/>
-  <line x1="33" y1="95" x2="95" y2="33" stroke="url(#gta6sb-sunset)" stroke-width="20" stroke-linecap="round"/>
+  <line x1="33" y1="95" x2="95" y2="33" stroke="url(#novice-sunset)" stroke-width="20" stroke-linecap="round"/>
   <line x1="33" y1="95" x2="95" y2="33" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
 </svg>

@@ -50,11 +50,14 @@ Open **Settings > Secrets and variables > Actions** and add these repository sec
 | Secret                 | Value                              |
 | ---------------------- | ---------------------------------- |
 | `CHROME_EXTENSION_ID`  | The item ID from step 2.           |
+| `CHROME_PUBLISHER_ID`  | Your publisher ID, see below.      |
 | `CHROME_CLIENT_ID`     | The same value as in Dark Connect. |
 | `CHROME_CLIENT_SECRET` | The same value as in Dark Connect. |
 | `CHROME_REFRESH_TOKEN` | The same value as in Dark Connect. |
 | `AMO_JWT_ISSUER`       | The same value as in Dark Connect. |
 | `AMO_JWT_SECRET`       | The same value as in Dark Connect. |
+
+The publisher ID identifies your Chrome Web Store developer account, not the extension. It is in the developer dashboard address, `chrome.google.com/webstore/devconsole/<publisher ID>/...`.
 
 The Chrome client and refresh token belong to your Google account, and the AMO keys belong to your Mozilla account. Both work for every extension you publish, so Dark Connect's values work here. GitHub does not show saved secrets again. If you no longer have the values:
 

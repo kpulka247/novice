@@ -14,10 +14,6 @@
 
 **Steps to test:**
 
-1.
-2.
-3.
-
 <!-- To check a box below, replace [ ] with [x]. -->
 
 - [ ] Checked in **Google Chrome**

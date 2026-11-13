@@ -5,6 +5,9 @@
 }
 
 body {
+  --control-height: 32px;
+  --control-radius: 10px;
+  --control-fill: #2a2436;
   margin: 0;
   width: 320px;
   background: var(--novice-ink);
@@ -177,9 +180,10 @@ main {
 .segmented {
   display: flex;
   flex-shrink: 0;
+  height: var(--control-height);
   padding: 3px;
   gap: 2px;
-  border-radius: 10px;
+  border-radius: var(--control-radius);
   background: #3a3447;
 }
 
@@ -190,7 +194,11 @@ main {
 }
 
 .segmented label {
-  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  line-height: 1;
   border-radius: 7px;
   font-size: 12px;
   font-weight: 600;
@@ -257,13 +265,16 @@ footer a:hover {
 .keyword-form input {
   flex: 1;
   min-width: 0;
-  padding: 7px 10px;
-  border: 1px solid var(--novice-line);
-  border-radius: 9px;
-  background: var(--novice-ink);
+  height: var(--control-height);
+  margin: 0;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--control-radius);
+  background: var(--control-fill);
   color: var(--novice-text);
   font: inherit;
   font-size: 13px;
+  transition: box-shadow 0.2s ease;
 }
 
 .keyword-form input::placeholder {
@@ -271,22 +282,33 @@ footer a:hover {
   opacity: 0.7;
 }
 
-.keyword-form input:focus-visible {
-  outline: 2px solid var(--novice-teal);
-  outline-offset: -1px;
+.keyword-form input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 61, 154, 0.6);
 }
 
 .keyword-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  padding: 0 12px;
+  height: var(--control-height);
+  margin: 0;
+  padding: 0 14px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--control-radius);
   background: var(--novice-pink);
   color: #fff;
   font: inherit;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1;
   cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.keyword-form button:hover:not(:disabled) {
+  filter: brightness(1.08);
 }
 
 .keyword-form button:focus-visible {
@@ -319,7 +341,7 @@ footer a:hover {
   max-width: 100%;
   padding-inline-start: 10px;
   border-radius: 999px;
-  background: #2a2436;
+  background: var(--control-fill);
   font-size: 12px;
 }
 

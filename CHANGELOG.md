@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/kpulka247/novice/compare/v1.0.0...v1.1.0) (2026-11-13)
+
+### Features
+
+* rename to NoVice, add custom keywords, match hints and GTA creators ([85c0dde](https://github.com/kpulka247/novice/commit/85c0dde560719ddea6f87eebeb016b6638c2979d))
+
 ## 1.0.0 (2026-11-12)
 
 ### Features

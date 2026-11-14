@@ -5,7 +5,7 @@
 <a href="https://github.com/kpulka247/novice/actions" title="GitHub Actions Workflow Status"><img src="https://img.shields.io/github/actions/workflow/status/kpulka247/novice/release.yml"></a>
 <a title="Chrome Web Store Size"><img src="https://img.shields.io/chrome-web-store/size/caledcpfdapmmhmflbpjmjnenmjggghp"></a>
 <a href="https://github.com/kpulka247/novice/releases" title="GitHub Release"><img src="https://img.shields.io/github/v/release/kpulka247/novice?logo=github&logoColor=white"></a>
-<a href="https://github.com/kpulka247/novice/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/license-source--available-0d0b14"></a>
+<a href="https://github.com/kpulka247/novice/blob/main/LICENSE" title="GitHub License"><img src="https://img.shields.io/github/license/kpulka247/novice?color=%230d0b14"></a>
 
 <a href="https://chromewebstore.google.com/detail/novice-block-gta-6-spoile/caledcpfdapmmhmflbpjmjnenmjggghp" title="Chrome Web Store Users"><img src="https://img.shields.io/chrome-web-store/users/caledcpfdapmmhmflbpjmjnenmjggghp?logo=Google%20Chrome&logoColor=white&color=%23ff3d9a"></a>
 <a href="https://chromewebstore.google.com/detail/novice-block-gta-6-spoile/caledcpfdapmmhmflbpjmjnenmjggghp" title="Chrome Web Store Rating"><img src="https://img.shields.io/chrome-web-store/rating/caledcpfdapmmhmflbpjmjnenmjggghp"></a>
@@ -98,7 +98,7 @@ Read **[CONTRIBUTING.md](./CONTRIBUTING.md)** for the project layout, the target
 
 ## License
 
-Source-available, all rights reserved. You can read the code, fork it, and send pull requests. You cannot publish the extension or a modified copy of it in any store or elsewhere. See [LICENSE](./LICENSE).
+[GPL-3.0](./LICENSE). The license covers the code. It does not give you the right to use the NoVice name, logo, or store graphics.
 
 An unofficial fan project, not affiliated with Rockstar Games or Take-Two Interactive. Grand Theft Auto is a trademark of Take-Two Interactive Software, Inc.
 

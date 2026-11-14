@@ -38,7 +38,7 @@ The two publish jobs finish with a notice that says the store secrets are not se
 2. Choose **On this site** and upload `novice-<version>-firefox.zip` from the latest GitHub Release. The add-on ID is `novice@kpulka.com`.
 
 3. When the form asks whether you use a build tool or minifier, answer **Yes**. Upload **Source code (zip)** from the same GitHub Release. Reviewers build it with `pnpm install && pnpm build`, as the README says.
-4. Fill in the listing from [store-listing.md](store-listing.md). Set the add-on URL to `novice`, because the README badges point to `addons.mozilla.org/firefox/addon/novice/`. For the license, choose **All Rights Reserved**. If the form only offers a custom license, choose **Custom License** and paste the text of `LICENSE`. Then upload the same five screenshots.
+4. Fill in the listing from [store-listing.md](store-listing.md). Set the add-on URL to `novice`, because the README badges point to `addons.mozilla.org/firefox/addon/novice/`. For the license, choose **GNU General Public License v3.0**. Then upload the same five screenshots.
 5. Submit the add-on.
 
 ## 4. Add the repository secrets

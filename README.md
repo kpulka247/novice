@@ -1,6 +1,6 @@
 <div align="center">
 
-![banner](static/images/banner.png)
+<img src="static/images/banner.png" alt="NoVice banner" width="440">
 
 <a href="https://github.com/kpulka247/novice/actions" title="GitHub Actions Workflow Status"><img src="https://img.shields.io/github/actions/workflow/status/kpulka247/novice/release.yml"></a>
 <a title="Chrome Web Store Size"><img src="https://img.shields.io/chrome-web-store/size/caledcpfdapmmhmflbpjmjnenmjggghp"></a>
@@ -34,6 +34,17 @@ Play GTA VI knowing nothing about it. NoVice blurs every trailer, leak, post, an
 ## Screenshots
 
 ![The extension popup over a page about GTA VI under the see-through cover](static/images/screenshot.png)
+
+<details>
+<summary>More screenshots</summary>
+
+![A blurred YouTube result that shows the matched words on hover](static/images/screenshot-hover.png)
+
+![Bing results for Rockstar Games with the GTA results blurred](static/images/screenshot-search.png)
+
+![The Take-Two Interactive article on Wikipedia with the GTA parts blurred](static/images/screenshot-article.png)
+
+</details>
 
 ## Installation
 

@@ -11,6 +11,9 @@ const SEARCH =
 const MIXED =
   "https://www.youtube.com/results?search_query=new+game+trailers+2026";
 const GTA6_PAGE = "https://www.youtube.com/results?search_query=gta+6+trailer";
+const SEARCH_ENGINE =
+  "https://www.bing.com/search?q=rockstar+games&setlang=en-US&cc=US";
+const ARTICLE = "https://en.wikipedia.org/wiki/Take-Two_Interactive";
 const WEB = [
   {
     name: "YouTube",
@@ -136,14 +139,7 @@ async function webGrid(captures) {
 
 async function withPopup(page, popup) {
   const { width, height } = await sharp(popup).metadata();
-  const blur = 24;
   const inset = 12;
-  const shadow = Buffer.from(
-    `<svg width="${width + blur * 2}" height="${height + blur * 2}" xmlns="http://www.w3.org/2000/svg">
-      <filter id="s"><feGaussianBlur stdDeviation="10"/></filter>
-      <rect x="${blur}" y="${blur + 6}" width="${width}" height="${height}" rx="12" fill="#000" fill-opacity="0.55" filter="url(#s)"/>
-    </svg>`,
-  );
   const border = Buffer.from(
     `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="12" fill="none" stroke="#fff" stroke-opacity="0.12"/>
@@ -152,7 +148,6 @@ async function withPopup(page, popup) {
   const left = WIDTH - inset - width;
   return sharp(await rounded(page, WIDTH, HEIGHT, 12))
     .composite([
-      { input: shadow, left: left - blur, top: inset - blur },
       { input: await rounded(popup, width, height, 12), left, top: inset },
       { input: border, left, top: inset },
     ])
@@ -175,6 +170,22 @@ async function popupShot({ context, id }, tabId) {
   await popup.goto(`chrome-extension://${id}/popup.html`);
   await popup.waitForTimeout(800);
   return popup.screenshot({ fullPage: true });
+}
+
+async function hoverShot(page) {
+  const box = await page.evaluate((height) => {
+    const target = [...document.querySelectorAll('[data-novice="blur"]')]
+      .map((el) => el.getBoundingClientRect())
+      .find(
+        (rect) => rect.width > 300 && rect.top > 80 && rect.bottom < height,
+      );
+    return target && { x: target.left + 60, y: target.top + 40 };
+  }, HEIGHT);
+  if (box) await page.mouse.move(box.x, box.y);
+  await page.waitForTimeout(600);
+  const image = await page.screenshot();
+  await page.mouse.move(0, 0);
+  return image;
 }
 
 const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;");
@@ -243,6 +254,7 @@ const setSettings = (patch) =>
 await setSettings({ enabled: true, style: "blur" });
 const blurPage = await openYouTube(english.context, SEARCH);
 const youtubeBlur = await blurPage.screenshot();
+const youtubeHover = await hoverShot(blurPage);
 
 const web = [{ ...WEB[0], image: youtubeBlur }];
 for (const site of WEB.slice(1)) {
@@ -257,6 +269,13 @@ const hidePage = await openYouTube(english.context, MIXED);
 const youtubeHide = await hidePage.screenshot();
 await hidePage.close();
 await setSettings({ style: "blur" });
+
+const searchPage = await openSite(english.context, SEARCH_ENGINE);
+const searchEngine = await searchPage.screenshot();
+await searchPage.close();
+const articlePage = await openSite(english.context, ARTICLE);
+const article = await articlePage.screenshot();
+await articlePage.close();
 
 const shieldPage = await openYouTube(english.context, GTA6_PAGE);
 const shield = await shieldPage.screenshot();
@@ -281,6 +300,15 @@ for (const lang of ["de", "es"]) {
 await sharp(acrossTheWeb).toFile(`${README_DIR}/across-the-web.png`);
 await sharp(await withPopup(shield, popupEnglish)).toFile(
   `${README_DIR}/screenshot.png`,
+);
+await sharp(await rounded(youtubeHover, WIDTH, HEIGHT, 12)).toFile(
+  `${README_DIR}/screenshot-hover.png`,
+);
+await sharp(await rounded(article, WIDTH, HEIGHT, 12)).toFile(
+  `${README_DIR}/screenshot-article.png`,
+);
+await sharp(await rounded(searchEngine, WIDTH, HEIGHT, 12)).toFile(
+  `${README_DIR}/screenshot-search.png`,
 );
 
 await frame("screenshot-1-blur.png", "Spoilers blur in place. Click to show.", [

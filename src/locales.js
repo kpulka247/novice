@@ -5,7 +5,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Blurs GTA 6 trailers, leaks, videos, posts and story spoilers across the web so you go in blind. Not affiliated with Rockstar.",
-    tagline: "Go in blind.",
     countLabel: "spoilers blocked on this page",
     countLabelPage: "This page is about GTA VI and is covered",
     countLabelNone: "Nothing to block on this page",
@@ -17,7 +16,6 @@ export const MESSAGES = {
     site: "Block on this site",
     siteAllowed: "Allowed on this site",
     reportIssue: "Report an issue",
-    sourceCode: "Source code",
     support: "Support",
     shieldTitle: "Spoiler ahead",
     shieldText:
@@ -40,7 +38,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Rozmywa zwiastuny, przecieki, filmy, posty i spoilery fabuły GTA 6 w całym internecie. Nie jest powiązane z Rockstar.",
-    tagline: "Zagraj bez spoilerów.",
     countLabel: "zablokowanych spoilerów na tej stronie",
     countLabelPage: "Ta strona dotyczy GTA VI i jest zakryta",
     countLabelNone: "Nic do zablokowania na tej stronie",
@@ -52,7 +49,6 @@ export const MESSAGES = {
     site: "Blokuj na tej stronie",
     siteAllowed: "Dozwolone na tej stronie",
     reportIssue: "Zgłoś problem",
-    sourceCode: "Kod źródłowy",
     support: "Wesprzyj",
     shieldTitle: "Uwaga, spoiler",
     shieldText:
@@ -75,7 +71,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Verwischt GTA-6-Trailer, Leaks, Videos, Posts und Story-Spoiler im ganzen Web. Nicht mit Rockstar verbunden.",
-    tagline: "Spiel es ohne Vorwissen.",
     countLabel: "Spoiler auf dieser Seite blockiert",
     countLabelPage: "Diese Seite handelt von GTA VI und ist verdeckt",
     countLabelNone: "Nichts zu blockieren auf dieser Seite",
@@ -87,7 +82,6 @@ export const MESSAGES = {
     site: "Auf dieser Website blockieren",
     siteAllowed: "Auf dieser Website erlaubt",
     reportIssue: "Problem melden",
-    sourceCode: "Quellcode",
     support: "Unterstützen",
     shieldTitle: "Spoiler voraus",
     shieldText:
@@ -110,7 +104,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Difumina tráilers, filtraciones, vídeos, publicaciones y spoilers de la historia de GTA 6 en toda la web. Sin relación con Rockstar.",
-    tagline: "Juega sin saber nada.",
     countLabel: "spoilers bloqueados en esta página",
     countLabelPage: "Esta página trata de GTA VI y está cubierta",
     countLabelNone: "Nada que bloquear en esta página",
@@ -122,7 +115,6 @@ export const MESSAGES = {
     site: "Bloquear en este sitio",
     siteAllowed: "Permitido en este sitio",
     reportIssue: "Informar de un problema",
-    sourceCode: "Código fuente",
     support: "Apoyar",
     shieldTitle: "Spoiler a la vista",
     shieldText:
@@ -145,7 +137,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Floute les bandes-annonces, fuites, vidéos, posts et spoilers de GTA 6 sur tout le web. Non affilié à Rockstar.",
-    tagline: "Jouez sans rien savoir.",
     countLabel: "spoilers bloqués sur cette page",
     countLabelPage: "Cette page parle de GTA VI et est masquée",
     countLabelNone: "Rien à bloquer sur cette page",
@@ -157,7 +148,6 @@ export const MESSAGES = {
     site: "Bloquer sur ce site",
     siteAllowed: "Autorisé sur ce site",
     reportIssue: "Signaler un problème",
-    sourceCode: "Code source",
     support: "Soutenir",
     shieldTitle: "Attention, spoiler",
     shieldText:
@@ -180,7 +170,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Sfoca trailer, leak, video, post e spoiler della trama di GTA 6 su tutto il web. Non affiliato a Rockstar.",
-    tagline: "Gioca senza sapere nulla.",
     countLabel: "spoiler bloccati in questa pagina",
     countLabelPage: "Questa pagina parla di GTA VI ed è coperta",
     countLabelNone: "Niente da bloccare in questa pagina",
@@ -192,7 +181,6 @@ export const MESSAGES = {
     site: "Blocca su questo sito",
     siteAllowed: "Consentito su questo sito",
     reportIssue: "Segnala un problema",
-    sourceCode: "Codice sorgente",
     support: "Sostieni",
     shieldTitle: "Spoiler in vista",
     shieldText:
@@ -215,7 +203,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Desfoca trailers, vazamentos, vídeos, posts e spoilers da história de GTA 6 em toda a web. Sem vínculo com a Rockstar.",
-    tagline: "Jogue sem saber nada.",
     countLabel: "spoilers bloqueados nesta página",
     countLabelPage: "Esta página é sobre GTA VI e está coberta",
     countLabelNone: "Nada para bloquear nesta página",
@@ -227,7 +214,6 @@ export const MESSAGES = {
     site: "Bloquear neste site",
     siteAllowed: "Permitido neste site",
     reportIssue: "Relatar um problema",
-    sourceCode: "Código-fonte",
     support: "Apoiar",
     shieldTitle: "Spoiler à frente",
     shieldText:
@@ -250,7 +236,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Vervaagt GTA 6-trailers, leaks, video's, posts en verhaalspoilers op het hele web. Niet verbonden aan Rockstar.",
-    tagline: "Speel het blanco.",
     countLabel: "spoilers geblokkeerd op deze pagina",
     countLabelPage: "Deze pagina gaat over GTA VI en is afgedekt",
     countLabelNone: "Niets te blokkeren op deze pagina",
@@ -262,7 +247,6 @@ export const MESSAGES = {
     site: "Blokkeren op deze site",
     siteAllowed: "Toegestaan op deze site",
     reportIssue: "Probleem melden",
-    sourceCode: "Broncode",
     support: "Steunen",
     shieldTitle: "Spoiler in zicht",
     shieldText:
@@ -285,7 +269,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Suddar ut GTA 6-trailers, läckor, videor, inlägg och storyspoilers på hela webben. Inte ansluten till Rockstar.",
-    tagline: "Spela utan att veta något.",
     countLabel: "spoilers blockerade på den här sidan",
     countLabelPage: "Den här sidan handlar om GTA VI och är täckt",
     countLabelNone: "Inget att blockera på den här sidan",
@@ -297,7 +280,6 @@ export const MESSAGES = {
     site: "Blockera på den här webbplatsen",
     siteAllowed: "Tillåten på den här webbplatsen",
     reportIssue: "Rapportera ett problem",
-    sourceCode: "Källkod",
     support: "Stöd",
     shieldTitle: "Spoiler framför dig",
     shieldText:
@@ -320,7 +302,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Rozmazává trailery, úniky, videa, příspěvky a spoilery příběhu GTA 6 na celém webu. Nesouvisí s Rockstar.",
-    tagline: "Hraj bez spoilerů.",
     countLabel: "zablokovaných spoilerů na této stránce",
     countLabelPage: "Tato stránka je o GTA VI a je zakrytá",
     countLabelNone: "Na této stránce není co blokovat",
@@ -332,7 +313,6 @@ export const MESSAGES = {
     site: "Blokovat na tomto webu",
     siteAllowed: "Povoleno na tomto webu",
     reportIssue: "Nahlásit problém",
-    sourceCode: "Zdrojový kód",
     support: "Podpořit",
     shieldTitle: "Pozor, spoiler",
     shieldText:
@@ -355,7 +335,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Размывает трейлеры, утечки, видео, посты и спойлеры сюжета GTA 6 по всему интернету. Не связано с Rockstar.",
-    tagline: "Играй, ничего не зная.",
     countLabel: "спойлеров заблокировано на этой странице",
     countLabelPage: "Эта страница о GTA VI и скрыта",
     countLabelNone: "На этой странице нечего блокировать",
@@ -366,8 +345,7 @@ export const MESSAGES = {
     strictHint: "Блокировать и посты о GTA и Rockstar",
     site: "Блокировать на этом сайте",
     siteAllowed: "Разрешено на этом сайте",
-    reportIssue: "Сообщить о проблеме",
-    sourceCode: "Исходный код",
+    reportIssue: "Нашли ошибку?",
     support: "Поддержать",
     shieldTitle: "Осторожно, спойлер",
     shieldText:
@@ -390,7 +368,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Розмиває трейлери, витоки, відео, дописи та спойлери сюжету GTA 6 по всьому інтернету. Не пов'язано з Rockstar.",
-    tagline: "Грай, нічого не знаючи.",
     countLabel: "спойлерів заблоковано на цій сторінці",
     countLabelPage: "Ця сторінка про GTA VI і прихована",
     countLabelNone: "На цій сторінці нічого блокувати",
@@ -401,8 +378,7 @@ export const MESSAGES = {
     strictHint: "Блокувати також дописи про GTA і Rockstar",
     site: "Блокувати на цьому сайті",
     siteAllowed: "Дозволено на цьому сайті",
-    reportIssue: "Повідомити про проблему",
-    sourceCode: "Вихідний код",
+    reportIssue: "Знайшли помилку?",
     support: "Підтримати",
     shieldTitle: "Обережно, спойлер",
     shieldText:
@@ -425,7 +401,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "GTA 6 fragmanlarını, sızıntılarını, videolarını ve hikâye spoilerlarını tüm webde bulanıklaştırır. Rockstar ile ilgisi yoktur.",
-    tagline: "Hiçbir şey bilmeden oyna.",
     countLabel: "spoiler bu sayfada engellendi",
     countLabelPage: "Bu sayfa GTA VI hakkında ve örtüldü",
     countLabelNone: "Bu sayfada engellenecek bir şey yok",
@@ -437,7 +412,6 @@ export const MESSAGES = {
     site: "Bu sitede engelle",
     siteAllowed: "Bu sitede izin verildi",
     reportIssue: "Sorun bildir",
-    sourceCode: "Kaynak kodu",
     support: "Destekle",
     shieldTitle: "Spoiler var",
     shieldText:
@@ -460,7 +434,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "يطمس عروض وتسريبات وفيديوهات ومنشورات وحرق أحداث GTA 6 في كل الويب. لا علاقة له بـ Rockstar.",
-    tagline: "العب دون أن تعرف شيئًا.",
     countLabel: "حرق أحداث محجوب في هذه الصفحة",
     countLabelPage: "هذه الصفحة عن GTA VI وهي مغطاة",
     countLabelNone: "لا شيء لحجبه في هذه الصفحة",
@@ -472,7 +445,6 @@ export const MESSAGES = {
     site: "الحجب على هذا الموقع",
     siteAllowed: "مسموح على هذا الموقع",
     reportIssue: "الإبلاغ عن مشكلة",
-    sourceCode: "الشيفرة المصدرية",
     support: "ادعم المشروع",
     shieldTitle: "حرق أحداث أمامك",
     shieldText: "هذه الصفحة عن GTA VI. ستبقى مطموسة حتى تلعب دون أن تعرف شيئًا.",
@@ -494,7 +466,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "पूरे वेब पर GTA 6 के ट्रेलर, लीक, वीडियो, पोस्ट और कहानी के स्पॉइलर धुंधले करता है। Rockstar से संबद्ध नहीं।",
-    tagline: "बिना कुछ जाने खेलें।",
     countLabel: "स्पॉइलर इस पेज पर ब्लॉक किए गए",
     countLabelPage: "यह पेज GTA VI के बारे में है और ढका गया है",
     countLabelNone: "इस पेज पर ब्लॉक करने को कुछ नहीं",
@@ -506,7 +477,6 @@ export const MESSAGES = {
     site: "इस साइट पर ब्लॉक करें",
     siteAllowed: "इस साइट पर अनुमति है",
     reportIssue: "समस्या की रिपोर्ट करें",
-    sourceCode: "सोर्स कोड",
     support: "सहयोग करें",
     shieldTitle: "आगे स्पॉइलर है",
     shieldText:
@@ -529,7 +499,6 @@ export const MESSAGES = {
     extName: "NoVice - Block GTA 6 Spoilers",
     extDescription:
       "Mengaburkan trailer, bocoran, video, postingan, dan spoiler cerita GTA 6 di seluruh web. Tidak berafiliasi dengan Rockstar.",
-    tagline: "Main tanpa tahu apa-apa.",
     countLabel: "spoiler diblokir di halaman ini",
     countLabelPage: "Halaman ini tentang GTA VI dan ditutup",
     countLabelNone: "Tidak ada yang perlu diblokir di halaman ini",
@@ -541,7 +510,6 @@ export const MESSAGES = {
     site: "Blokir di situs ini",
     siteAllowed: "Diizinkan di situs ini",
     reportIssue: "Laporkan masalah",
-    sourceCode: "Kode sumber",
     support: "Dukung",
     shieldTitle: "Awas spoiler",
     shieldText:
@@ -564,7 +532,6 @@ export const MESSAGES = {
     extName: "NoVice - GTA 6 ネタバレブロッカー",
     extDescription:
       "GTA 6 のトレーラー、リーク、動画、投稿、ストーリーのネタバレをウェブ全体でぼかします。Rockstar とは無関係です。",
-    tagline: "何も知らずにプレイしよう。",
     countLabel: "件のネタバレをこのページでブロックしました",
     countLabelPage: "このページは GTA VI に関するもので、隠されています",
     countLabelNone: "このページにブロックするものはありません",
@@ -576,7 +543,6 @@ export const MESSAGES = {
     site: "このサイトでブロック",
     siteAllowed: "このサイトでは許可されています",
     reportIssue: "問題を報告",
-    sourceCode: "ソースコード",
     support: "支援する",
     shieldTitle: "ネタバレ注意",
     shieldText:
@@ -599,7 +565,6 @@ export const MESSAGES = {
     extName: "NoVice - GTA 6 스포일러 차단기",
     extDescription:
       "웹 전체에서 GTA 6 트레일러, 유출, 영상, 게시물, 스토리 스포일러를 흐리게 처리합니다. Rockstar와 관련이 없습니다.",
-    tagline: "아무것도 모른 채 플레이하세요.",
     countLabel: "개의 스포일러를 이 페이지에서 차단함",
     countLabelPage: "이 페이지는 GTA VI에 관한 내용이라 가려졌습니다",
     countLabelNone: "이 페이지에는 차단할 내용이 없습니다",
@@ -611,7 +576,6 @@ export const MESSAGES = {
     site: "이 사이트에서 차단",
     siteAllowed: "이 사이트에서 허용됨",
     reportIssue: "문제 신고",
-    sourceCode: "소스 코드",
     support: "후원하기",
     shieldTitle: "스포일러 주의",
     shieldText:
@@ -634,7 +598,6 @@ export const MESSAGES = {
     extName: "NoVice - GTA 6 剧透拦截器",
     extDescription:
       "在整个网络上模糊 GTA 6 的预告片、泄露、视频、帖子和剧情剧透。与 Rockstar 无关。",
-    tagline: "一无所知地开玩。",
     countLabel: "条剧透已在此页面拦截",
     countLabelPage: "此页面与 GTA VI 有关，已被遮盖",
     countLabelNone: "此页面没有需要拦截的内容",
@@ -646,7 +609,6 @@ export const MESSAGES = {
     site: "在此网站上拦截",
     siteAllowed: "已在此网站上允许",
     reportIssue: "报告问题",
-    sourceCode: "源代码",
     support: "支持",
     shieldTitle: "前方剧透",
     shieldText: "此页面与 GTA VI 有关。它会保持模糊，让你一无所知地开玩。",
@@ -668,7 +630,6 @@ export const MESSAGES = {
     extName: "NoVice - GTA 6 劇透攔截器",
     extDescription:
       "在整個網路上模糊 GTA 6 的預告片、外流、影片、貼文和劇情劇透。與 Rockstar 無關。",
-    tagline: "一無所知地開玩。",
     countLabel: "則劇透已在此頁面攔截",
     countLabelPage: "此頁面與 GTA VI 有關，已被遮蓋",
     countLabelNone: "此頁面沒有需要攔截的內容",
@@ -680,7 +641,6 @@ export const MESSAGES = {
     site: "在此網站上攔截",
     siteAllowed: "已在此網站上允許",
     reportIssue: "回報問題",
-    sourceCode: "原始碼",
     support: "支持",
     shieldTitle: "前方劇透",
     shieldText: "此頁面與 GTA VI 有關。它會保持模糊，讓你一無所知地開玩。",

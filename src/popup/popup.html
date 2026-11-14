@@ -10,18 +10,14 @@
   <body>
     <header>
       <div class="logo" id="logo"></div>
-      <div>
+      <div class="brand">
         <h1>NoVice</h1>
-        <p class="tagline" data-i18n="tagline"></p>
+        <p class="tagline" id="count-label"></p>
       </div>
+      <span class="stat-number" id="count">0</span>
     </header>
 
     <main>
-      <section class="stat">
-        <span class="stat-number" id="count">0</span>
-        <span class="stat-label" id="count-label"></span>
-      </section>
-
       <section class="settings">
         <label class="row">
           <span class="row-text">
@@ -84,21 +80,18 @@
     </main>
 
     <footer>
-      <a
-        href="https://github.com/kpulka247/novice/issues"
-        target="_blank"
-        data-i18n="reportIssue"
-      ></a>
-      <a
-        href="https://github.com/kpulka247/novice"
-        target="_blank"
-        data-i18n="sourceCode"
-      ></a>
-      <a
-        href="https://ko-fi.com/Y8Y71ERSZF"
-        target="_blank"
-        data-i18n="support"
-      ></a>
+      <div class="footer-links">
+        <span id="version"></span>
+        <a
+          href="https://github.com/kpulka247/novice/issues"
+          target="_blank"
+          data-i18n="reportIssue"
+        ></a>
+      </div>
+      <a class="coffee" href="https://ko-fi.com/Y8Y71ERSZF" target="_blank">
+        <span id="coffee-cup"></span>
+        <span data-i18n="support"></span>
+      </a>
     </footer>
     <script src="popup.js"></script>
   </body>

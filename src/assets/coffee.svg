@@ -1,0 +1,7 @@
+<svg class="coffee-cup" viewBox="0 0 19 16" aria-hidden="true">
+  <path class="coffee-steam" d="M7 -4c-1 1.1 1 2.1 0 3.2"/>
+  <path class="coffee-steam" d="M10.5 -4c-1 1.1 1 2.1 0 3.2"/>
+  <path d="M3 2.5h11v4.5a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/>
+  <path d="M14 4h1.25a2.5 2.5 0 0 1 0 5H14"/>
+  <path d="M2 15h13"/>
+</svg>

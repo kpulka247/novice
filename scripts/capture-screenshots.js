@@ -40,6 +40,7 @@ const TILE = { width: 640, height: 400, gap: 20 };
 const WIDTH = 1280;
 const HEIGHT = 800;
 const FONT = "Segoe UI, Inter, Arial, sans-serif";
+const CLEAR = { r: 0, g: 0, b: 0, alpha: 0 };
 
 mkdirSync(README_DIR, { recursive: true });
 mkdirSync(STORE_DIR, { recursive: true });
@@ -100,8 +101,8 @@ async function openSite(context, url) {
 async function webGrid(captures) {
   const columns = 2;
   const rows = Math.ceil(captures.length / columns);
-  const width = columns * TILE.width + (columns + 1) * TILE.gap;
-  const height = rows * TILE.height + (rows + 1) * TILE.gap;
+  const width = columns * TILE.width + (columns - 1) * TILE.gap;
+  const height = rows * TILE.height + (rows - 1) * TILE.gap;
   const layers = [];
   for (const [index, { name, image, crop }] of captures.entries()) {
     const source = crop ? sharp(image).extract(crop) : sharp(image);
@@ -111,9 +112,8 @@ async function webGrid(captures) {
       TILE.height,
       12,
     );
-    const left = TILE.gap + (index % columns) * (TILE.width + TILE.gap);
-    const top =
-      TILE.gap + Math.floor(index / columns) * (TILE.height + TILE.gap);
+    const left = (index % columns) * (TILE.width + TILE.gap);
+    const top = Math.floor(index / columns) * (TILE.height + TILE.gap);
     const labelWidth = 24 + name.length * 11;
     const label = Buffer.from(
       `<svg width="${labelWidth}" height="34" xmlns="http://www.w3.org/2000/svg">
@@ -128,10 +128,34 @@ async function webGrid(captures) {
       top: top + TILE.height - 48,
     });
   }
-  return sharp({
-    create: { width, height, channels: 4, background: "#0d0b14" },
-  })
+  return sharp({ create: { width, height, channels: 4, background: CLEAR } })
     .composite(layers)
+    .png()
+    .toBuffer();
+}
+
+async function withPopup(page, popup) {
+  const { width, height } = await sharp(popup).metadata();
+  const blur = 24;
+  const inset = 12;
+  const shadow = Buffer.from(
+    `<svg width="${width + blur * 2}" height="${height + blur * 2}" xmlns="http://www.w3.org/2000/svg">
+      <filter id="s"><feGaussianBlur stdDeviation="10"/></filter>
+      <rect x="${blur}" y="${blur + 6}" width="${width}" height="${height}" rx="12" fill="#000" fill-opacity="0.55" filter="url(#s)"/>
+    </svg>`,
+  );
+  const border = Buffer.from(
+    `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="12" fill="none" stroke="#fff" stroke-opacity="0.12"/>
+    </svg>`,
+  );
+  const left = WIDTH - inset - width;
+  return sharp(await rounded(page, WIDTH, HEIGHT, 12))
+    .composite([
+      { input: shadow, left: left - blur, top: inset - blur },
+      { input: await rounded(popup, width, height, 12), left, top: inset },
+      { input: border, left, top: inset },
+    ])
     .png()
     .toBuffer();
 }
@@ -234,13 +258,13 @@ const youtubeHide = await hidePage.screenshot();
 await hidePage.close();
 await setSettings({ style: "blur" });
 
-const [youtubeTab] = await english.worker.evaluate(() =>
-  chrome.tabs.query({ url: "https://www.youtube.com/*" }),
-);
-const popupEnglish = await popupShot(english, youtubeTab.id);
-
 const shieldPage = await openYouTube(english.context, GTA6_PAGE);
 const shield = await shieldPage.screenshot();
+const [shieldTab] = await english.worker.evaluate(
+  (url) => chrome.tabs.query({ url }),
+  shieldPage.url(),
+);
+const popupEnglish = await popupShot(english, shieldTab.id);
 await english.context.close();
 
 const popups = [popupEnglish];
@@ -255,8 +279,9 @@ for (const lang of ["de", "es"]) {
 }
 
 await sharp(acrossTheWeb).toFile(`${README_DIR}/across-the-web.png`);
-await sharp(shield).toFile(`${README_DIR}/screenshot-shield.png`);
-await sharp(popupEnglish).toFile(`${README_DIR}/screenshot-popup.png`);
+await sharp(await withPopup(shield, popupEnglish)).toFile(
+  `${README_DIR}/screenshot.png`,
+);
 
 await frame("screenshot-1-blur.png", "Spoilers blur in place. Click to show.", [
   youtubeBlur,

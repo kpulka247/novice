@@ -33,11 +33,7 @@ Play GTA VI knowing nothing about it. NoVice blurs every trailer, leak, post, an
 
 ## Screenshots
 
-<div align="center">
-<img src="static/images/screenshot-shield.png" alt="A page about GTA VI under the see-through cover" width="68%">
-&nbsp;
-<img src="static/images/screenshot-popup.png" alt="The extension popup" width="28%">
-</div>
+![The extension popup over a page about GTA VI under the see-through cover](static/images/screenshot.png)
 
 ## Installation
 

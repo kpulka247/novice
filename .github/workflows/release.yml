@@ -81,10 +81,9 @@ jobs:
       - name: Publish to Chrome Web Store
         if: env.CHROME_EXTENSION_ID != ''
         run: |
-          pnpm dlx chrome-webstore-upload-cli@4 upload \
+          pnpm dlx chrome-webstore-upload-cli@4 \
             --source dist/novice-${{ needs.release.outputs.new_release_version }}-chrome.zip \
-            --extension-id $CHROME_EXTENSION_ID \
-            --auto-publish
+            --extension-id $CHROME_EXTENSION_ID
         env:
           PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}

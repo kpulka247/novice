@@ -60,7 +60,13 @@ await sharp(LOGO_FILE, { density: 600 })
   .png()
   .toFile("static/store/store-icon-128.png");
 
-await sharp(Buffer.from(banner)).png().toFile("static/images/banner.png");
+const bannerMask = Buffer.from(
+  `<svg width="1320" height="840"><rect width="1320" height="840" rx="36" fill="#fff"/></svg>`,
+);
+await sharp(Buffer.from(banner))
+  .composite([{ input: bannerMask, blend: "dest-in" }])
+  .png()
+  .toFile("static/images/banner.png");
 await sharp(Buffer.from(banner))
   .resize(440, 280)
   .png()

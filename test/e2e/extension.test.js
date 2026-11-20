@@ -60,6 +60,12 @@ before(async () => {
       body: await readFile(path.join(here, "fixtures", "youtube-embed.html")),
     }),
   );
+  await context.route("https://www.youtube.com/shorts/**", async (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: await readFile(path.join(here, "fixtures", "shorts.html")),
+    }),
+  );
   await context.route("https://kick.com/**", async (route) =>
     route.fulfill({
       contentType: "text/html",
@@ -577,5 +583,34 @@ test("an embedded video about GTA VI is blurred in its frame, not covered like a
   await page.click("#player");
   await frame.waitForSelector("novice-shield", { state: "detached" });
   assert.equal(page.url(), `${base}/embed`);
+  await page.close();
+});
+
+test("on a shorts feed, Skip moves on to the next video", async () => {
+  const page = await context.newPage();
+  await page.goto("https://www.youtube.com/shorts/0");
+  await page.waitForSelector("novice-shield", { state: "attached" });
+  await page.keyboard.press("Enter");
+  await page.waitForURL("https://www.youtube.com/shorts/1");
+  await page.waitForSelector("novice-shield", { state: "detached" });
+  assert.equal(await page.title(), "Cat learns to swim - YouTube");
+  await page.close();
+});
+
+test("on a shorts feed, scrolling or pressing Down on the cover skips one video", async () => {
+  const page = await context.newPage();
+  await page.goto("https://www.youtube.com/shorts/0");
+  await page.waitForSelector("novice-shield", { state: "attached" });
+  await page.keyboard.press("ArrowDown");
+  await page.waitForURL("https://www.youtube.com/shorts/1");
+  await page.waitForSelector("novice-shield", { state: "detached" });
+  await page.waitForTimeout(300);
+  assert.equal(page.url(), "https://www.youtube.com/shorts/1");
+
+  await page.goto("https://www.youtube.com/shorts/0");
+  await page.waitForSelector("novice-shield", { state: "attached" });
+  await page.mouse.move(400, 300);
+  await page.mouse.wheel(0, 400);
+  await page.waitForURL("https://www.youtube.com/shorts/1");
   await page.close();
 });

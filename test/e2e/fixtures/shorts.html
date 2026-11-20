@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GTA 6 trailer reaction - YouTube</title>
+  </head>
+  <body>
+    <h2 id="caption">GTA 6 trailer reaction</h2>
+    <div id="navigation-button-down"><button>Next</button></div>
+    <script>
+      const shorts = [
+        "GTA 6 trailer reaction",
+        "Cat learns to swim",
+        "Dog plays piano",
+      ];
+      let index = 0;
+      function next() {
+        index += 1;
+        history.pushState({}, "", `/shorts/${index}`);
+        document.title = `${shorts[index]} - YouTube`;
+        document.getElementById("caption").textContent = shorts[index];
+      }
+      document.querySelector("#navigation-button-down button").onclick = next;
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown") next();
+      });
+    </script>
+  </body>
+</html>

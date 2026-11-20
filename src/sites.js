@@ -38,6 +38,7 @@ const SITE_UNITS = [
       "ytd-rich-shelf-renderer",
       "ytd-horizontal-card-list-renderer",
     ],
+    feeds: [{ path: /^\/shorts\//, next: "#navigation-button-down button" }],
   },
   {
     hosts: /(^|\.)reddit\.com$/,
@@ -177,6 +178,12 @@ export function findSubjects(host) {
   return (siteFor(host)?.subjects ?? [])
     .map((selector) => document.querySelector(selector))
     .filter(Boolean);
+}
+
+// A feed plays one item at a time and moves on when scrolled, so a covered
+// item there can be skipped instead of left.
+export function feedAt(host, pathname) {
+  return siteFor(host)?.feeds?.find(({ path }) => path.test(pathname)) ?? null;
 }
 
 export function findEmptiedShelf(unit, host, isGone) {

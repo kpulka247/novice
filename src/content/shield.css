@@ -95,23 +95,56 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-.leave {
+.leave,
+.feed .skip {
   padding: 12px 16px;
   color: #fff;
   background: var(--novice-pink);
 }
 
-.leave:hover {
+.leave:hover,
+.feed .skip:hover {
   background: #ff5aab;
 }
 
-.reveal {
+.reveal,
+.feed .leave {
   margin-top: 6px;
   padding: 10px 16px;
   color: var(--novice-muted);
   background: transparent;
 }
 
-.reveal:hover {
+.reveal:hover,
+.feed .leave:hover {
   color: var(--novice-text);
+}
+
+.skip {
+  display: none;
+}
+
+.feed .skip {
+  display: block;
+}
+
+.feed .leave {
+  margin-top: 6px;
+}
+
+.framed {
+  padding: 12px;
+  cursor: pointer;
+}
+
+.framed .card {
+  padding: 16px 20px 10px;
+}
+
+.framed :is(.logo, h1, #text, .leave) {
+  display: none;
+}
+
+.framed .found {
+  margin-bottom: 8px;
 }

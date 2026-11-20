@@ -11,7 +11,7 @@ import {
   getSettings,
   onSettingsChange,
 } from "../settings.js";
-import { findSubjects } from "../sites.js";
+import { feedAt, findSubjects } from "../sites.js";
 import { WATCHED_ATTRS, createBlocker, termLabel } from "./blocker.js";
 import { createReveals } from "./reveals.js";
 import { BLOCKED_TITLE, createShield } from "./shield.js";
@@ -30,6 +30,8 @@ let lastReported = -1;
 let appliedConfig = "off";
 
 const shield = createShield({
+  framed: !isTopFrame,
+  onSkip: skipFeedItem,
   onLeave: () => {
     if (history.length > 1) history.back();
     else ext.runtime.sendMessage({ type: "close-tab" });
@@ -39,6 +41,24 @@ const shield = createShield({
     sync();
   },
 });
+
+const feed = () => (isTopFrame ? feedAt(host, location.pathname) : null);
+
+// The site's own next button is the surest step; Down is what its keyboard
+// handler listens for when the button is not rendered.
+function skipFeedItem() {
+  const selector = feed()?.next;
+  const next = selector && document.querySelector(selector);
+  if (next) return next.click();
+  document.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "ArrowDown",
+      code: "ArrowDown",
+      keyCode: 40,
+      bubbles: true,
+    }),
+  );
+}
 
 function isActive() {
   return blocksOn(settings, host) && !reveals.hasPage(location.href);
@@ -111,7 +131,7 @@ function sync() {
   }
   const spoiler = active ? pageSpoiler() : null;
   if (spoiler) {
-    shield.show(termLabel(spoiler.term));
+    shield.show(termLabel(spoiler.term), { inFeed: Boolean(feed()) });
   } else {
     shield.hide();
     restoreTitle();

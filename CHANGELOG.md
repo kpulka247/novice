@@ -1,3 +1,13 @@
+## [1.4.0](https://github.com/kpulka247/novice/compare/v1.3.2...v1.4.0) (2026-11-20)
+
+### Features
+
+* **content:** add Skip to the cover on YouTube Shorts ([0ecf83e](https://github.com/kpulka247/novice/commit/0ecf83eeccf3de154397ad3dc23f6d016767dccc))
+
+### Bug Fixes
+
+* **content:** blur an embed about GTA VI in its frame, not like a page ([e9a26ef](https://github.com/kpulka247/novice/commit/e9a26ef63bc54771155b858e679e13ca028aca2e))
+
 ## [1.3.2](https://github.com/kpulka247/novice/compare/v1.3.1...v1.3.2) (2026-11-20)
 
 ### Bug Fixes

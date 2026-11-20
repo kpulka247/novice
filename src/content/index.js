@@ -30,6 +30,7 @@ let lastReported = -1;
 let appliedConfig = "off";
 
 const shield = createShield({
+  framed: !isTopFrame,
   onLeave: () => {
     if (history.length > 1) history.back();
     else ext.runtime.sendMessage({ type: "close-tab" });

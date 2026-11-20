@@ -20,6 +20,7 @@ const FIXTURES = {
   "/forum": "forum.html",
   "/spa": "spa.html",
   "/table": "table.html",
+  "/embed": "embed.html",
 };
 
 before(async () => {
@@ -51,6 +52,12 @@ before(async () => {
     route.fulfill({
       contentType: "text/html",
       body: await readFile(path.join(here, "fixtures", "facebook.html")),
+    }),
+  );
+  await context.route("https://www.youtube.com/embed/**", async (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: await readFile(path.join(here, "fixtures", "youtube-embed.html")),
     }),
   );
   await context.route("https://kick.com/**", async (route) =>
@@ -546,5 +553,29 @@ test("covers a stream whose game is GTA VI, though the page title never says so"
   await page.goto("https://kick.com/streamer");
   await page.waitForSelector("novice-shield", { state: "attached" });
   assert.equal(await page.title(), "Spoiler ahead");
+  await page.close();
+});
+
+test("an embedded video about GTA VI is blurred in its frame, not covered like a page", async () => {
+  const page = await context.newPage();
+  await page.goto(`${base}/embed`);
+  const frame = page.frame({ url: /youtube\.com\/embed/ });
+  await frame.waitForSelector("html[data-novice-shield]", {
+    state: "attached",
+  });
+  assert.equal(
+    await frame.$eval("html", (h) => h.getAttribute("data-novice-shield")),
+    "frame",
+  );
+  assert.equal(await page.$("novice-shield"), null);
+  assert.equal(await page.title(), "Funny posts");
+  assert.equal(
+    await page.evaluate(() => document.activeElement.tagName),
+    "BODY",
+    "the frame's cover does not pull focus into the post",
+  );
+  await page.click("#player");
+  await frame.waitForSelector("novice-shield", { state: "detached" });
+  assert.equal(page.url(), `${base}/embed`);
   await page.close();
 });

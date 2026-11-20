@@ -115,3 +115,20 @@ button:focus-visible {
 .reveal:hover {
   color: var(--novice-text);
 }
+
+.framed {
+  padding: 12px;
+  cursor: pointer;
+}
+
+.framed .card {
+  padding: 16px 20px 10px;
+}
+
+.framed :is(.logo, h1, #text, .leave) {
+  display: none;
+}
+
+.framed .found {
+  margin-bottom: 8px;
+}

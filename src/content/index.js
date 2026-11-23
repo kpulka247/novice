@@ -28,6 +28,8 @@ let lastHref = location.href;
 let lastSubjects = "";
 let lastReported = -1;
 let appliedConfig = "off";
+const cleanTitles = new Set();
+let heldTitle = null;
 
 const shield = createShield({
   framed: !isTopFrame,
@@ -82,6 +84,23 @@ const pageSpoiler = () =>
   pageMatches().find((match) => match.level === "gta6") ?? null;
 const isAboutGta = () => pageMatches().length > 0;
 
+// A music player names the track in its title only while it plays, and the
+// cover pauses it, which takes the name away again. A title that turns to GTA
+// VI on a page first seen with a clean one keeps the cover up until the page
+// changes, so Show anyway stays within reach.
+function heldTitleSpoiler() {
+  const title = siteTitle();
+  const match = findSpoiler(title, keywords, rules());
+  if (match?.level === "gta6") {
+    if (cleanTitles.has(location.href)) {
+      heldTitle = { href: location.href, match };
+    }
+  } else if (title) {
+    cleanTitles.add(location.href);
+  }
+  return heldTitle?.href === location.href ? heldTitle.match : null;
+}
+
 const subjectsText = () =>
   findSubjects(host)
     .map((subject) => `${subject.textContent} ${subject.href ?? ""}`)
@@ -129,7 +148,8 @@ function sync() {
     blocker.configure(settings, { aboutGta, nameAllowed });
     if (active) blocker.scan(document.documentElement);
   }
-  const spoiler = active ? pageSpoiler() : null;
+  const held = active ? heldTitleSpoiler() : null;
+  const spoiler = active ? (pageSpoiler() ?? held) : null;
   if (spoiler) {
     shield.show(termLabel(spoiler.term), { inFeed: Boolean(feed()) });
   } else {

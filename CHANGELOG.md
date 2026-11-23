@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/kpulka247/novice/compare/v1.4.0...v1.4.1) (2026-11-23)
+
+### Bug Fixes
+
+* **content:** keep the cover up when a player names a GTA VI track only while it plays ([97dac1e](https://github.com/kpulka247/novice/commit/97dac1eea3c3fd0aa5046bfa7491b99ee66eee91)), closes [#10](https://github.com/kpulka247/novice/issues/10)
+
 ## [1.4.0](https://github.com/kpulka247/novice/compare/v1.3.2...v1.4.0) (2026-11-20)
 
 ### Features

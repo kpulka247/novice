@@ -21,6 +21,7 @@ const FIXTURES = {
   "/spa": "spa.html",
   "/table": "table.html",
   "/embed": "embed.html",
+  "/player": "player.html",
 };
 
 before(async () => {
@@ -551,6 +552,24 @@ test("show anyway holds for the rest of the tab's session", async () => {
   await page.goto(`${base}/news/3`);
   await page.waitForTimeout(300);
   assert.equal(await page.$("novice-shield"), null);
+  await page.close();
+});
+
+test("a player that names a GTA VI track only while it plays stays covered until shown", async () => {
+  const page = await context.newPage();
+  await page.goto(`${base}/player`);
+  await page.click("#play");
+  await page.waitForSelector("novice-shield", { state: "attached" });
+  await page.waitForTimeout(300);
+  assert.ok(await page.$("novice-shield"), "the cover stays after the pause");
+  assert.equal(await page.$eval("#track", (track) => track.paused), true);
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+  await page.waitForSelector("novice-shield", { state: "detached" });
+  await page.click("#play");
+  await page.waitForTimeout(300);
+  assert.equal(await page.$("novice-shield"), null);
+  assert.equal(await page.$eval("#track", (track) => track.paused), false);
   await page.close();
 });
 

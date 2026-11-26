@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/kpulka247/novice/compare/v1.4.1...v1.4.2) (2026-11-26)
+
+### Bug Fixes
+
+* **content:** drop a cover when the content it matched goes away ([f1c253c](https://github.com/kpulka247/novice/commit/f1c253ce8f7f66172f0a72d59b6d834d4fab6345))
+* **content:** keep hover events away from the site on blurred units ([15509ff](https://github.com/kpulka247/novice/commit/15509ff1205d325ba69be8b3601cf21a1b2fc8ac))
+
 ## [1.4.1](https://github.com/kpulka247/novice/compare/v1.4.0...v1.4.1) (2026-11-23)
 
 ### Bug Fixes

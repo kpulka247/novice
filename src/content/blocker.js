@@ -171,10 +171,11 @@ export function createBlocker(host, reveals) {
       aboutGta ? findStorySpoiler(text) : null,
     );
 
-  const isSkipped = (element) =>
+  const isIgnored = (element) =>
     SKIPPED.has(element.tagName) ||
     element.isContentEditable ||
-    element.matches(SETTLED);
+    element.matches(REVEALED);
+  const isSkipped = (element) => isIgnored(element) || element.matches(SETTLED);
 
   function label(unit, { level, term }) {
     unit.setAttribute(LEVEL, level);
@@ -297,6 +298,39 @@ export function createBlocker(host, reveals) {
     if (match) mark(parent, match);
   }
 
+  function contentMatch(unit) {
+    const walker = document.createTreeWalker(
+      unit,
+      NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) =>
+          node.nodeType === Node.ELEMENT_NODE && isIgnored(node)
+            ? NodeFilter.FILTER_REJECT
+            : NodeFilter.FILTER_ACCEPT,
+      },
+    );
+    let match = null;
+    for (
+      let node = walker.currentNode;
+      node && !isGta6(match);
+      node = walker.nextNode()
+    ) {
+      const found =
+        node.nodeType === Node.TEXT_NODE ? textMatch(node) : attrsMatch(node);
+      match = stronger(match, found);
+    }
+    return match;
+  }
+
+  // Sites reuse an element for other content, like the one hover preview
+  // YouTube moves between cards, so a cover lasts only while its match does.
+  function recheck(unit) {
+    if (!unit.isConnected) return;
+    const match = contentMatch(unit);
+    if (match) label(unit, match);
+    else clear(unit);
+  }
+
   function expandTruncatedText(root) {
     if (!expanderSelector) return;
     const buttons = [...root.querySelectorAll(expanderSelector)];
@@ -358,6 +392,16 @@ export function createBlocker(host, reveals) {
       strict = settings.strict;
       style = settings.style;
       keywords = compileKeywords(settings.keywords);
+    },
+    recheckCovered(nodes) {
+      const units = new Set();
+      for (const node of nodes) {
+        const element =
+          node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+        const unit = element?.closest(COVERED);
+        if (unit) units.add(unit);
+      }
+      units.forEach(recheck);
     },
     blurredUnitAt(target) {
       return target instanceof Element ? target.closest(BLURRED) : null;

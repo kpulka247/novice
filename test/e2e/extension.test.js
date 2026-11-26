@@ -540,6 +540,23 @@ test("a revealed unit stays revealed when the site renders it again", async () =
   await page.close();
 });
 
+test("a unit the site reuses for something else loses its cover", async () => {
+  const page = await openFeed();
+  await page.$eval("#link a", (a) => a.setAttribute("href", "/news/pasta"));
+  await page.$eval("#trailer", (li) => {
+    li.textContent = "Cat learns to swim";
+  });
+  await page.waitForTimeout(100);
+  assert.equal(await stateOf(page, "link"), "visible");
+  assert.equal(await stateOf(page, "trailer"), "visible");
+  assert.equal(
+    await page.$eval("#link", (el) => el.getAttribute("tabindex")),
+    null,
+  );
+  assert.equal(await stateOf(page, "split"), "blur");
+  await page.close();
+});
+
 test("show anyway holds for the rest of the tab's session", async () => {
   const page = await context.newPage();
   await page.goto(`${base}/news/3`);

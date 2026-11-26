@@ -166,6 +166,7 @@ function handleMutations(records) {
       else if (record.type === "characterData") blocker.scan(record.target);
       else record.addedNodes.forEach((node) => blocker.scan(node));
     }
+    blocker.recheckCovered(records.map((record) => record.target));
   }
   const titleChanged =
     document.title !== BLOCKED_TITLE && document.title !== siteTitle();

@@ -540,6 +540,22 @@ test("a revealed unit stays revealed when the site renders it again", async () =
   await page.close();
 });
 
+test("the site never learns the pointer is over a blurred unit", async () => {
+  const page = await openFeed();
+  await page.$eval("#feed", (feed) => {
+    window.hovered = new Set();
+    for (const type of ["mouseover", "pointerover", "mousemove"]) {
+      feed.addEventListener(type, (event) =>
+        window.hovered.add(event.target.closest("li").id),
+      );
+    }
+  });
+  await page.hover("#trailer");
+  await page.hover("#pasta");
+  assert.deepEqual(await page.evaluate(() => [...window.hovered]), ["pasta"]);
+  await page.close();
+});
+
 test("a unit the site reuses for something else loses its cover", async () => {
   const page = await openFeed();
   await page.$eval("#link a", (a) => a.setAttribute("href", "/news/pasta"));

@@ -209,6 +209,21 @@ const GUARDED_EVENTS = [
   "keydown",
 ];
 
+// Sites play a preview of what is under the pointer, so a blurred unit keeps
+// the pointer to itself. Leave events still pass, so no hover state sticks.
+function hideHover(event) {
+  if (blocker.blurredUnitAt(event.target)) event.stopImmediatePropagation();
+}
+
+const HOVER_EVENTS = [
+  "pointerover",
+  "pointerenter",
+  "pointermove",
+  "mouseover",
+  "mouseenter",
+  "mousemove",
+];
+
 function start() {
   new MutationObserver(handleMutations).observe(document, {
     childList: true,
@@ -222,6 +237,9 @@ function start() {
 
   for (const type of GUARDED_EVENTS) {
     window.addEventListener(type, revealOnActivate, true);
+  }
+  for (const type of HOVER_EVENTS) {
+    window.addEventListener(type, hideHover, true);
   }
 
   document.addEventListener(
